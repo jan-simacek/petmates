@@ -8,10 +8,7 @@ class App extends Component {
     render(): React.ReactNode {
         return (
             <div className="App">
-                Přidat inzerát:
                 <NewArticleForm articleService={articleService}/>
-                <br />
-
             </div>
         )
     }

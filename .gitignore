@@ -63,3 +63,5 @@ node_modules/
 
 # dotenv environment variables file
 .env
+build
+/functions/src/petmates-2b6fe-firebase-adminsdk-opz6l-c4c44fd909.json
