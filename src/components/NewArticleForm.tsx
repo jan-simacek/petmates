@@ -66,6 +66,9 @@ export class NewArticleForm extends Component<NewArticleFormProps, NewArticleFor
                     if (error) return <div>Error</div>
                     return (
                         <div className="new-article-background">
+                            <div className="new-article-heading">
+                                <Typography variant="h2">Nový inzerát</Typography>
+                            </div>
                             <Formik
                                 initialValues={this.state}
                                 validate={values => {

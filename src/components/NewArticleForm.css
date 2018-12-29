@@ -1,0 +1,20 @@
+.new-article-background {
+    background-image: url("/images/new-article-background-resized.jpg");
+    background-size: contain;
+    background-position: top center;
+    background-color: #ffdab99e;
+    position: absolute;
+    width: 100%;
+    background-repeat: no-repeat;
+}
+
+.new-article-form {
+    max-width: 700px;
+    margin: 10% auto;
+    background: white;
+    box-shadow: 0 37.125px 70px -12.125px rgba(0,0,0,0.3);
+}
+
+.new-article-heading {
+    margin: 5% 5%;
+}
