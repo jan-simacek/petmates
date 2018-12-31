@@ -32,14 +32,14 @@ export class ImageUpload extends Component<ImageUploadProps, ImageUploadState>{
             .then(() => {
                 this.setState({uploadError: false, fileName: undefined, uploadProgress: undefined})
                 this.props.field.value = false
-                this.props.field.onChange({target: {value: 'false', name: this.props.field.name}})
+                this.props.field.onChange({target: {value: undefined, name: this.props.field.name}})
             })
             .catch((error) => alert(error))
     }
 
     private handleUploadSuccess(fileName: string) {
         this.setState({uploadError: false, fileName: fileName})
-        this.props.field.onChange({target: {value: 'true', name: this.props.field.name}})
+        this.props.field.onChange({target: {value: this.state.fileName, name: this.props.field.name}})
     }
 
     private handleUploadError(error: any) {

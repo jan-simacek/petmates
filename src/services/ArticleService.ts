@@ -1,5 +1,5 @@
 import { ApolloClient } from 'apollo-client'
-import {Article} from "../model";
+import {Article, ArticleInput} from "../model";
 import gql from "graphql-tag";
 import {NormalizedCacheObject} from 'apollo-cache-inmemory';
 
@@ -8,13 +8,15 @@ const NEW_ARTICLE_MUTATION = gql`
         $breedId: ID!,
         $petName: String!,
         $age: Int,
-        $isMale: Boolean) {
+        $isMale: Boolean,
+        $imageId: ID!) {
     createArticle(articleInput: {
         breedName: $breedName,
         breedId: $breedId,
         petName: $petName,
         age: $age,
-        isMale: $isMale
+        isMale: $isMale,
+        imageId: $imageId
     }) {
       breedId
     }
@@ -24,12 +26,13 @@ const NEW_ARTICLE_MUTATION = gql`
 export class ArticleService {
     constructor(private apolloClient: ApolloClient<NormalizedCacheObject>) {}
 
-    public addArticle(article: Article): Promise<Article> {
+    public addArticle(article: ArticleInput ): Promise<Article> {
         return this.apolloClient.mutate({mutation: NEW_ARTICLE_MUTATION, variables: {
                 breedId: 4,
                 petName: article.petName,
                 age: article.petAge,
-                isMale: article.isMale
+                isMale: article.isMale,
+                imageId: article.imageId
             }}) as Promise<Article>
     }
 }

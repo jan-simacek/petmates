@@ -1,14 +1,18 @@
-import React, { Component } from 'react'
-import './App.css'
-import gql from 'graphql-tag'
-import {NewArticleForm} from "./components";
-import {articleService} from "./index";
+import React, { Component } from 'react';
+import { Switch, Route } from 'react-router';
+import './App.css';
+import { NewArticleForm } from "./components";
+import { ArticleList } from './components/ArticleList';
 
 class App extends Component {
     render(): React.ReactNode {
         return (
             <div className="App">
-                <NewArticleForm articleService={articleService}/>
+                <Switch>
+                    <Route exact path="/new-article" component={NewArticleForm} />
+                    <Route exact path="/article-list" component={ArticleList} />
+
+                </Switch>
             </div>
         )
     }

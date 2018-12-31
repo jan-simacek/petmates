@@ -1,0 +1,4 @@
+- zmen private key a tak na firebase nez s tim pudes ven!
+- loading ikona a disable submit na new article form
+- BARVA kocky!, popis, odmena a dalsi pripadny pole na new article form
+- mazat dovolit jenom fajly ktery vytvoril current user (mluvim o fotce kocky ;)

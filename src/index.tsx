@@ -11,6 +11,7 @@ import {ArticleService} from "./services/ArticleService";
 import {theme} from "./theme/theme";
 import {MuiThemeProvider} from '@material-ui/core';
 import firebase from 'firebase';
+import { BrowserRouter } from 'react-router-dom'
 
 var config = {
     apiKey: "AIzaSyCDSVW5vzFgauiBIhGQFdP0CC6Oy1AWeVQ",
@@ -27,11 +28,13 @@ export const client = new ApolloClient({link: httpLink, cache: new InMemoryCache
 export const articleService = new ArticleService(client)
 
 ReactDOM.render(
-    <MuiThemeProvider theme={theme}>
-        <ApolloProvider client={client}>
-            <App />
-        </ApolloProvider>
-    </MuiThemeProvider>,
+    <BrowserRouter>
+        <MuiThemeProvider theme={theme}>
+            <ApolloProvider client={client}>
+                <App />
+            </ApolloProvider>
+        </MuiThemeProvider>
+    </BrowserRouter>,
 
     document.getElementById('root'))
 

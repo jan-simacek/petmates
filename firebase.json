@@ -17,7 +17,7 @@
     ],
     "rewrites": [
       {
-        "source": "!/images/**",
+        "source": "!/@(images|user-images)/**",
         "destination": "/index.html"
       }
     ]

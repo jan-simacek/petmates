@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import {Field, Form, Formik} from "formik";
-import {Breed, BreedsResponse} from "../model";
+import { BreedsResponse } from "../model";
+import {articleService} from "../index";
 import {Query} from "react-apollo";
 import gql from "graphql-tag";
-import {ArticleService} from "../services/ArticleService";
 import {Select, TextField, RadioGroup} from "formik-material-ui";
 import {Grid, Typography, FormControl, InputLabel, FormControlLabel, Radio, MenuItem, Button} from '@material-ui/core';
 import './NewArticleForm.css'
@@ -14,11 +14,7 @@ export interface NewArticleFormState {
     petName: string
     petAge: number
     isMale: string
-    fileUploaded: string
-}
-
-export interface NewArticleFormProps {
-    articleService: ArticleService
+    fileUploaded?: string
 }
 
 class BreedQuery extends Query<BreedsResponse> {}
@@ -52,10 +48,41 @@ const MyField = (props: MyFieldProps) => {
     />
 }
 
-export class NewArticleForm extends Component<NewArticleFormProps, NewArticleFormState> {
+export class NewArticleForm extends Component<any, NewArticleFormState> {
+    private articleService = articleService
+
     constructor(props: any) {
         super(props)
-        this.state = {breedId: 0, petName: "", petAge: 1, isMale: "true", fileUploaded: 'false'}
+        this.state = {breedId: 0, petName: "", petAge: 1, isMale: "true", fileUploaded: undefined}
+    }
+
+    private validate(values: any): any {
+        const errors = {}
+        Object.keys(values).forEach(key => {
+            let valResult = undefined
+            if(key == 'fileUploaded') {
+                valResult = !values[key] ? 'Nahrajte prosím obrázek' : undefined
+            } else if(key == 'petAge') {
+                const emptyValidation = validateValue(values[key])
+                if(emptyValidation) {
+                    valResult = emptyValidation
+                } else {
+                    const val = +values[key]
+                    if(isNaN(val)) {
+                        valResult = 'Věk musí být číslo'
+                    } else if(val <= 0) {
+                        valResult = 'Věk musí být kladné číslo'
+                    }
+                }
+            } else {
+                valResult = validateValue(values[key])
+            }
+            if(valResult) {
+                // @ts-ignore
+                errors[key] = valResult
+            }
+        })
+        return errors
     }
 
     render(): React.ReactNode {
@@ -71,40 +98,14 @@ export class NewArticleForm extends Component<NewArticleFormProps, NewArticleFor
                             </div>
                             <Formik
                                 initialValues={this.state}
-                                validate={values => {
-                                    const errors = {}
-                                    Object.keys(values).forEach(key => {
-                                        if(key == 'fileUploaded') {
-                                            // @ts-ignore
-                                            errors[key] = !(values[key] && JSON.parse(values[key])) ? 'Nahrajte prosím obrázek' : undefined
-                                        } else if(key == 'petAge') {
-                                            const emptyValidation = validateValue(values[key])
-                                            if(emptyValidation) {
-                                                // @ts-ignore
-                                                errors[key] = emptyValidation
-                                            } else {
-                                                const val = +values[key]
-                                                if(isNaN(val)) {
-                                                    // @ts-ignore
-                                                    errors[key] = 'Věk musí být číslo'
-                                                } else if(val <= 0) {
-                                                    // @ts-ignore
-                                                    errors[key] = 'Věk musí být kladné číslo'
-                                                }
-                                            }
-                                        } else {
-                                            // @ts-ignore
-                                            errors[key] = validateValue(values[key])
-                                        }
-                                    })
-                                    return errors;
-                                }}
+                                validate={this.validate}
                                 onSubmit={(values, {setSubmitting}) => {
-                                    this.props.articleService.addArticle({
+                                    this.articleService.addArticle({
                                         breedId: values.breedId,
                                         isMale: JSON.parse("" + values.isMale),
                                         petAge: values.petAge,
-                                        petName: values.petName
+                                        petName: values.petName,
+                                        imageId: values.fileUploaded
                                     })
                                     setSubmitting(false)
                                 }}>
