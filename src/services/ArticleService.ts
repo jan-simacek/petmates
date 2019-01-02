@@ -7,13 +7,13 @@ const NEW_ARTICLE_MUTATION = gql`
   mutation NewArticleMutation(
         $breedId: ID!,
         $petName: String!,
-        $age: Int,
+        $petAge: Int,
         $isMale: Boolean,
         $imageId: ID!) {
     createArticle(articleInput: {
         breedId: $breedId,
         petName: $petName,
-        age: $age,
+        petAge: $petAge,
         isMale: $isMale,
         imageId: $imageId
     }) {
@@ -27,9 +27,9 @@ export class ArticleService {
 
     public addArticle(article: ArticleInput ): Promise<Article> {
         return this.apolloClient.mutate({mutation: NEW_ARTICLE_MUTATION, variables: {
-                breedId: 4,
+                breedId: article.breedId,
                 petName: article.petName,
-                age: article.petAge,
+                petAge: article.petAge,
                 isMale: article.isMale,
                 imageId: article.imageId
             }}) as Promise<Article>

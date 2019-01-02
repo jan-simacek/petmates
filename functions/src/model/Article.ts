@@ -1,7 +1,7 @@
 export interface ArticleInput {
     breedId: string
     petName: string
-    age: number
+    petAge: number
     isMale: boolean
     imageId: string
 }
@@ -18,7 +18,7 @@ type Article {
     breedName: String
     breedId: ID!
     petName: String!
-    age: Int
+    petAge: Int
     isMale: Boolean
     createDate: Date
     imageId: ID!
@@ -27,7 +27,7 @@ type Article {
 input ArticleInput {
     breedId: ID!
     petName: String!
-    age: Int
+    petAge: Int
     isMale: Boolean    
     imageId: ID!
 }

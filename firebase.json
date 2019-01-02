@@ -17,7 +17,7 @@
     ],
     "rewrites": [
       {
-        "source": "!/@(images|user-images)/**",
+        "source": "!/@(images|petmates-2b6fe/us-central1/user-images)/**",
         "destination": "/index.html"
       }
     ]
