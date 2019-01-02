@@ -4,14 +4,13 @@ import gql from "graphql-tag";
 import {NormalizedCacheObject} from 'apollo-cache-inmemory';
 
 const NEW_ARTICLE_MUTATION = gql`
-  mutation NewArticleMutation($breedName: String,
+  mutation NewArticleMutation(
         $breedId: ID!,
         $petName: String!,
         $age: Int,
         $isMale: Boolean,
         $imageId: ID!) {
     createArticle(articleInput: {
-        breedName: $breedName,
         breedId: $breedId,
         petName: $petName,
         age: $age,

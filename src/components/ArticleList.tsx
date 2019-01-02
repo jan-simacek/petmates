@@ -29,7 +29,7 @@ export class ArticleList extends Component {
                     if (error) return <div>Error</div>
                     return (
                         <div>
-                            {data!.articles.map(article => <ArticleCard />)}
+                            {data!.articles.map(article => <ArticleCard article={article}/>)}
                         </div>
                     )
                 }}

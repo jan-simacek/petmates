@@ -7,10 +7,17 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import classnames from 'classnames';
 import React from "react";
+import { Article } from "../model";
 
 const styles = (theme: Theme) => ({
     card: {
       maxWidth: 400,
+    },
+    cardHeaderM: {
+      backgroundColor: '#d3e7ff'
+    },
+    cardHeaderF: {
+      backgroundColor: '#fddcf6'
     },
     media: {
       height: 0,
@@ -30,12 +37,13 @@ const styles = (theme: Theme) => ({
       transform: 'rotate(180deg)',
     },
     avatar: {
-      backgroundColor: 'red',
-    },
+      backgroundColor: 'lightgrey',
+    }
   });
 
 interface ArticleCardProps {
     classes: any
+    article: Article
 }
 
 interface ArticleCardState {
@@ -55,16 +63,17 @@ export class ArticleCard extends React.Component<ArticleCardProps, ArticleCardSt
     return (
       <Card className={classes.card}>
         <CardHeader
+          className={this.props.article.isMale ? classes.cardHeaderM : classes.cardHeaderF}
           avatar={
-            <Avatar aria-label="Recipe" className={classes.avatar}>
+            <Avatar className={classes.avatar}>
               R
             </Avatar>
           }
-          action={
-            <IconButton>
-              <MoreVertIcon />
-            </IconButton>
-          }
+          // action={
+          //   <IconButton>
+          //     <MoreVertIcon />
+          //   </IconButton>
+          // }
           title="Shrimp and Chorizo Paella"
           subheader="September 14, 2016"
         />

@@ -1,5 +1,4 @@
 export interface ArticleInput {
-    breedName: string
     breedId: string
     petName: string
     age: number
@@ -10,6 +9,7 @@ export interface ArticleInput {
 export interface Article extends ArticleInput {
     _id: string
     createDate: Date
+    breedName: string
 }
 
 export const articleTypeDef = `
@@ -25,7 +25,6 @@ type Article {
 }
 
 input ArticleInput {
-    breedName: String
     breedId: ID!
     petName: String!
     age: Int

@@ -1,6 +1,7 @@
 export interface Article extends ArticleInput {
     _id: number
     createDate: Date
+    breedName: String
 }
 
 export interface ArticleInput {

@@ -7,7 +7,7 @@ import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import express from 'express'
 import cors from 'cors'
-import { resolvers } from './resolvers'
+import * as config from './config'
 import { typeDefs } from './model'
 import { serviceAccount } from './ServiceAccount'
 
@@ -18,6 +18,7 @@ admin.initializeApp({
 import { ApolloServer } from 'apollo-server-express';
 import {ServiceAccount} from "firebase-admin";
 
+const resolvers = config.resolversService.getResolvers()
 const server = new ApolloServer({
     typeDefs,
     resolvers,
