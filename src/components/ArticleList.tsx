@@ -19,6 +19,7 @@ const ARTICLES_QUERY = gql`
             isMale
             createDate
             imageId
+            articleText
         }
     }
 `

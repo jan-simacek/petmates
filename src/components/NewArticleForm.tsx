@@ -8,6 +8,8 @@ import {Select, TextField, RadioGroup} from "formik-material-ui";
 import {Grid, Typography, FormControl, InputLabel, FormControlLabel, Radio, MenuItem, Button} from '@material-ui/core';
 import './NewArticleForm.css'
 import {ImageUpload} from "./ImageUpload"
+import {fieldToTextField} from 'formik-material-ui'
+import {TextField as MTextField} from '@material-ui/core'
 
 export interface NewArticleFormState {
     breedId: number
@@ -15,6 +17,7 @@ export interface NewArticleFormState {
     petAge: number
     isMale: string
     fileUploaded?: string
+    articleText: string
 }
 
 class BreedQuery extends Query<BreedsResponse> {}
@@ -53,7 +56,7 @@ export class NewArticleForm extends Component<any, NewArticleFormState> {
 
     constructor(props: any) {
         super(props)
-        this.state = {breedId: 0, petName: "", petAge: 1, isMale: "true", fileUploaded: undefined}
+        this.state = {breedId: 0, petName: "", petAge: 1, isMale: "true", fileUploaded: undefined, articleText: ""}
     }
 
     private validate(values: any): any {
@@ -105,7 +108,8 @@ export class NewArticleForm extends Component<any, NewArticleFormState> {
                                         isMale: JSON.parse("" + values.isMale),
                                         petAge: values.petAge,
                                         petName: values.petName,
-                                        imageId: values.fileUploaded
+                                        imageId: values.fileUploaded,
+                                        articleText: values.articleText
                                     })
                                     setSubmitting(false)
                                 }}>
@@ -146,6 +150,12 @@ export class NewArticleForm extends Component<any, NewArticleFormState> {
                                                         disabled={isSubmitting}
                                                     />
                                                 </Field>
+                                            </Grid>
+                                            <Grid item>
+                                                <Field name="articleText" render={(props: any) => (
+                                                    <MTextField {...fieldToTextField(props)} multiline={true} rows={4}
+                                                        label="Text inzerátu" style={{width: '100%'}}  />
+                                                )}/>
                                             </Grid>
                                             <Grid item>
                                                 <Field name="fileUploaded" component={ImageUpload} />

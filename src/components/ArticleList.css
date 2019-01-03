@@ -1,3 +1,42 @@
 .article-list {
     margin-top: 50px
 }
+.card-content {
+    max-height: 75px;
+    overflow: hidden;
+    text-align: justify;
+    position: relative;
+}
+
+/* create the ... */
+.card-content:before {
+    /* points in the end */
+    content: '... ';
+    /* absolute position */
+    position: absolute;
+    /* set position to right bottom corner of block */
+    right: 0.5em;
+    bottom: 0;
+    color: rgba(0, 0, 0, 0.5)
+  }
+  /* hide ... if we have text, which is less than or equal to max lines */
+.card-content:after {
+    /* points in the end */
+    content: '';
+    /* absolute position */
+    position: absolute;
+    /* set position to right bottom corner of text */
+    right: 0;
+    /* set width and height */
+    width: 1em;
+    height: 1em;
+    margin-top: 0.2em;
+    /* bg color = bg color under block */
+    background: white;
+}
+
+.actions {
+    display: flex;
+    position: absolute;
+    bottom: 0;
+}

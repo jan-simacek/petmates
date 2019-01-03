@@ -9,9 +9,12 @@ import React from "react";
 import { Article } from "../model";
 import { firestoreService } from '../services'
 
-const styles = (theme: Theme) => ({
+const styles = (theme: Theme) => (
+    {
     card: {
-        maxWidth: 400,
+        width: 400,
+        height: 460,
+        position: 'relative' as 'relative'
     },
     cardHeaderM: {
         backgroundColor: '#d3e7ff'
@@ -22,9 +25,6 @@ const styles = (theme: Theme) => ({
     media: {
         height: 0,
         paddingTop: '56.25%', // 16:9
-    },
-    actions: {
-        display: 'flex',
     },
     expand: {
         transform: 'rotate(0deg)',
@@ -38,7 +38,10 @@ const styles = (theme: Theme) => ({
     },
     avatar: {
         backgroundColor: 'lightgrey',
-    }
+    },
+    articleText: {
+        whiteSpace: 'pre-line' as 'pre-line',
+    },
 });
 
 interface ArticleCardProps {
@@ -88,13 +91,12 @@ export class ArticleCard extends React.Component<ArticleCardProps, ArticleCardSt
                     image={this.state.articleImgUrl}
                     title="Paella dish"
                 />
-                <CardContent>
-                    <Typography component="p">
-                        This impressive paella is a perfect party dish and a fun meal to cook together with your
-                        guests. Add 1 cup of frozen peas along with the mussels, if you like.
-          </Typography>
+                <CardContent className="card-content">
+                    <Typography component="p" className={classes.articleText}>
+                        {this.props.article.articleText}
+                    </Typography>
                 </CardContent>
-                <CardActions className={classes.actions} disableActionSpacing>
+                <CardActions className="actions" disableActionSpacing>
                     <IconButton aria-label="Add to favorites">
                         <FavoriteIcon />
                     </IconButton>

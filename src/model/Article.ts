@@ -10,6 +10,7 @@ export interface ArticleInput {
     petAge: number
     isMale: boolean
     imageId: string
+    articleText: string
 }
 
 export interface ArticleListResponse {

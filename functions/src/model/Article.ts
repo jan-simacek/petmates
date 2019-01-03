@@ -4,6 +4,7 @@ export interface ArticleInput {
     petAge: number
     isMale: boolean
     imageId: string
+    articleText: string
 }
 
 export interface Article extends ArticleInput {
@@ -22,6 +23,7 @@ type Article {
     isMale: Boolean
     createDate: Date
     imageId: ID!
+    articleText: String
 }
 
 input ArticleInput {
@@ -30,5 +32,6 @@ input ArticleInput {
     petAge: Int
     isMale: Boolean    
     imageId: ID!
+    articleText: String
 }
 `
