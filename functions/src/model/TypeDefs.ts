@@ -8,7 +8,7 @@ export const typeDefs = gql`
     ${Breed.breedTypeDef}
     type Query {
         breeds: [Breed]
-        articles: [Article]
+        articles(lastDisplayedId: ID): [Article]
     }
    
     type Mutation {

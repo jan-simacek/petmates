@@ -31,7 +31,8 @@ export class ResolverService {
                 async breeds(): Promise<Breed[]> {
                     return that.breedService.loadAllBreeds()
                 },
-                async articles(lastDisplayedId: string): Promise<Article[]> {
+                async articles(_rootValue, args): Promise<Article[]> {
+                    const lastDisplayedId = args.lastDisplayedId as string
                     return that.articlesService.loadAllArticles(lastDisplayedId)
                 }
             },

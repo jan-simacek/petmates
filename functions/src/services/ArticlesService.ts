@@ -1,33 +1,36 @@
 import * as admin from 'firebase-admin'
-import firebase from 'firebase'
 import { Article, ArticleInput } from '../model';
 import { BreedsService } from './BreedsService';
 
-const PAGE_SIZE = 5
+const PAGE_SIZE = 3
 
 export class ArticlesService {
     constructor(private breedsService: BreedsService){}
 
-    public async loadArticleById(id: string): Promise<Article> {
+    public async loadArticleById(id: string): Promise<any> {
         const articles = await admin
             .firestore()
             .collection('articles')
-            .where(firebase.firestore.FieldPath.documentId(), '==', id)
+            .where(admin.firestore.FieldPath.documentId(), '==', id)
             .get()
         if(articles.docs.length == 0) {
             return null
         }
-        return this.articleDataToArticle(articles.docs[0])
+        return articles.docs[0]
     }
 
     public async loadAllArticles(lastDisplayedArticleId: string): Promise<Article[]> {
-        const lastDisplayedArticle = this.loadArticleById(lastDisplayedArticleId)
-
-        const articles = await admin
+        let query = admin
             .firestore()
             .collection('articles')
             .orderBy("createDate", 'desc')
-            .startAfter(lastDisplayedArticle)
+
+        if(lastDisplayedArticleId) {
+            const lastDisplayedArticle = await this.loadArticleById(lastDisplayedArticleId)
+            query = query.startAfter(lastDisplayedArticle)
+        }
+
+        const articles = await query
             .limit(PAGE_SIZE)
             .get()
         return articles.docs.map(article => this.articleDataToArticle(article)) as Article[]
@@ -40,7 +43,7 @@ export class ArticlesService {
     public async createArticle(articleInput: ArticleInput): Promise<Article> {
         const allBreeds = await this.breedsService.loadAllBreeds()
         const breed = allBreeds.find(breed => breed.breedId == (+articleInput.breedId))
-        let docData = JSON.parse(JSON.stringify(articleInput))
+        let docData = ArticlesService.toJSON(articleInput)
         const createDate = Date.now()
         docData["createDate"] = createDate
         docData["breedName"] = breed.breedName
@@ -54,5 +57,9 @@ export class ArticlesService {
             breedName: breed.breedName,
             ...articleInput
         }
+    }
+
+    private static toJSON(obj: any): any {
+        JSON.parse(JSON.stringify(obj))
     }
 }

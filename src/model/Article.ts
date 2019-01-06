@@ -1,5 +1,5 @@
 export interface Article extends ArticleInput {
-    _id: number
+    _id: string
     createDate: Date
     breedName: String
 }

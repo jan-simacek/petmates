@@ -24,6 +24,24 @@ const NEW_ARTICLE_MUTATION = gql`
   }
 `
 
+const ARTICLES_QUERY = gql`
+    query Articles($lastDisplayedId: ID) {
+        articles(lastDisplayedId: $lastDisplayedId) {
+            _id
+            breedName
+            breedId
+            petName
+            petAge
+            isMale
+            createDate
+            imageId
+            articleText
+        }
+    }
+`
+interface ArticleList {
+    articles: Article[]
+}
 export class ArticleService {
     constructor(private apolloClient: ApolloClient<NormalizedCacheObject>) {}
 
@@ -36,5 +54,14 @@ export class ArticleService {
                 imageId: article.imageId,
                 articleText: article.articleText
             }}) as Promise<Article>
+    }
+
+    public async loadArticles(lastDisplayedId?: string): Promise<Article[]> {
+        const response = await this.apolloClient
+            .query<ArticleList>({query: ARTICLES_QUERY, variables: {'lastDisplayedId': lastDisplayedId}})
+        if(response.errors) {
+            throw new Error("Problem when loading articles: " + response.errors)
+        }
+        return response.data.articles as Article[]
     }
 }

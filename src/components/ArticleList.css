@@ -1,5 +1,5 @@
 .article-list {
-    margin-top: 50px
+    margin-top: 1.5em
 }
 .card-content {
     max-height: 75px;
@@ -39,4 +39,13 @@
     display: flex;
     position: absolute;
     bottom: 0;
+}
+
+.loader-wrapper {
+    text-align: center;
+    margin: 0.5em
+}
+
+.loader {
+    display: inline-block
 }
