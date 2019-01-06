@@ -1,0 +1,19 @@
+.article-detail-container {
+    max-width: 100%;
+    margin: 10% auto;
+    display: grid;
+    grid-template-columns: 60% auto;
+    grid-template-areas: 'photo info';
+    grid-gap: 0.5em;
+}
+
+.article-detail-photo {
+    grid-area: photo;
+    padding: 10px;
+    border: 1px solid lightgray;
+    border-radius: 10px;
+}
+
+.article-detail-info {
+    grid-area: info
+}

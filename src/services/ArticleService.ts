@@ -2,6 +2,7 @@ import { ApolloClient } from 'apollo-client'
 import {Article, ArticleInput} from "../model";
 import gql from "graphql-tag";
 import {NormalizedCacheObject} from 'apollo-cache-inmemory';
+import { Query, QueryProps } from 'react-apollo';
 
 const NEW_ARTICLE_MUTATION = gql`
   mutation NewArticleMutation(
@@ -39,9 +40,30 @@ const ARTICLES_QUERY = gql`
         }
     }
 `
-interface ArticleList {
+
+export const ARTICLE_QUERY = gql`
+    query Article($articleId: ID) {
+        article(articleId: $articleId) {
+            _id
+            breedName
+            breedId
+            petName
+            petAge
+            isMale
+            createDate
+            imageId
+            articleText
+        }
+    }
+`
+
+interface ArticleListQueryResponse {
     articles: Article[]
 }
+interface ArticleQueryResponse {
+    article: Article
+}
+
 export class ArticleService {
     constructor(private apolloClient: ApolloClient<NormalizedCacheObject>) {}
 
@@ -58,10 +80,19 @@ export class ArticleService {
 
     public async loadArticles(lastDisplayedId?: string): Promise<Article[]> {
         const response = await this.apolloClient
-            .query<ArticleList>({query: ARTICLES_QUERY, variables: {'lastDisplayedId': lastDisplayedId}})
+            .query<ArticleListQueryResponse>({query: ARTICLES_QUERY, variables: {'lastDisplayedId': lastDisplayedId}})
         if(response.errors) {
             throw new Error("Problem when loading articles: " + response.errors)
         }
         return response.data.articles as Article[]
+    }
+
+    public async loadArticleById(articleId: string): Promise<Article> {
+        const response = await this.apolloClient
+            .query<ArticleQueryResponse>({query: ARTICLE_QUERY, variables: {'articleId': articleId}})
+            if(response.errors) {
+                throw new Error("Problem when loading articles: " + response.errors)
+            }
+            return response.data.article as Article
     }
 }

@@ -1,12 +1,13 @@
+import './ArticleList.css'
 import React, { Component, ReactNode } from "react";
 import { Query } from "react-apollo";
 import { ArticleListResponse, Article } from "../model";
 import gql from "graphql-tag";
 import ArticleCard from "./ArticleCard";
 import { Grid, Typography, CircularProgress } from "@material-ui/core";
-import './ArticleList.css'
 import { articleService } from '../index'
 import InfiniteScroll from 'react-infinite-scroller'
+import { Link } from "react-router-dom";
 
 class ArticleListQuery extends Query<ArticleListResponse> { }
 
@@ -31,7 +32,13 @@ export class ArticleList extends Component<any, ArticleListState> {
                 <div className="article-list">
                     <Grid container spacing={24} justify="center">
                         {this.state.articles.map(art => {
-                            return <Grid key={art._id} item><ArticleCard article={art}/></Grid>
+                            return (
+                                <Grid key={art._id} item>
+                                    <Link to={`/article/${art._id}`}>
+                                        <ArticleCard article={art}/>
+                                    </Link>
+                                </Grid>
+                            )
                         })}
                     </Grid>
                 </div>

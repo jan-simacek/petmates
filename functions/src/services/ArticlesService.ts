@@ -7,7 +7,12 @@ const PAGE_SIZE = 3
 export class ArticlesService {
     constructor(private breedsService: BreedsService){}
 
-    public async loadArticleById(id: string): Promise<any> {
+    public async loadArticleById(articleId: string): Promise<Article> {
+        const article = await this.loadArticleDocById(articleId)
+        return this.articleDataToArticle(article)
+    }
+
+    private async loadArticleDocById(id: string): Promise<any> {
         const articles = await admin
             .firestore()
             .collection('articles')
@@ -26,7 +31,7 @@ export class ArticlesService {
             .orderBy("createDate", 'desc')
 
         if(lastDisplayedArticleId) {
-            const lastDisplayedArticle = await this.loadArticleById(lastDisplayedArticleId)
+            const lastDisplayedArticle = await this.loadArticleDocById(lastDisplayedArticleId)
             query = query.startAfter(lastDisplayedArticle)
         }
 

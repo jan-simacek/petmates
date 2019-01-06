@@ -1,6 +1,6 @@
 import { GraphQLScalarType } from 'graphql';
 import { Kind } from 'graphql/language';
-import { Breed, Article, ArticleInput } from '../model'
+import { Breed, Article, ArticleInput, articleTypeDef } from '../model'
 import { Query, Mutation } from "react-apollo";
 import { BreedsService } from './BreedsService';
 import { ArticlesService } from './ArticlesService';
@@ -34,6 +34,9 @@ export class ResolverService {
                 async articles(_rootValue, args): Promise<Article[]> {
                     const lastDisplayedId = args.lastDisplayedId as string
                     return that.articlesService.loadAllArticles(lastDisplayedId)
+                },
+                async article(_rootValue, args): Promise<Article> {
+                    return that.articlesService.loadArticleById(args.articleId)
                 }
             },
             Mutation: {
