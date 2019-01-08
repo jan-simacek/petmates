@@ -22,6 +22,12 @@ export const theme = createMuiTheme({
         ].join(','),
         h2: {
             color: '#535353'
+        },
+        h6: {
+            color: '#535353'
+        },
+        body2: {
+            color: '#535353'
         }
     },
     shape: {

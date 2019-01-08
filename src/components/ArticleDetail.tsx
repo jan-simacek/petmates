@@ -5,6 +5,8 @@ import { Query } from 'react-apollo';
 import { Article } from '../model';
 import { articleService } from '../index'
 import { firestoreService } from '../services';
+import { Typography, Grid, CircularProgress } from '@material-ui/core';
+import { Loader } from './Loader';
 
 interface ArticleDetailsRouteParams {
     articleId: string
@@ -15,33 +17,72 @@ interface ArticleDetailProps {
 }
 
 interface ArticleDetailState {
-    article?: Article
+    articleLoaded: boolean
+    article: Article
     articleImgUrl?: string
 }
 
 export class ArticleDetail extends Component<ArticleDetailProps, ArticleDetailState> {
     constructor(props: ArticleDetailProps) {
         super(props)
-        this.state = {}
+        this.state = {article: {
+            _id: "",
+            articleText: "",
+            breedId: 0,
+            breedName: "",
+            createDate: new Date(),
+            imageId: "",
+            isMale: true,
+            petAge: 0,
+            petName: ""
+        }, articleLoaded: false}
         articleService.loadArticleById(this.props.match.params.articleId)
             .then(article => {
-                this.setState({article: article})
+                this.setState({article: article, articleLoaded: true})
                 return firestoreService.getImageDownloadUrl(article.imageId)
             }).then(url => this.setState({articleImgUrl: url}))
             
     }
 
     render(): ReactNode {
-        return (
-            <div className="article-detail-container">
-                <div className="article-detail-photo">
-                    <img style={{maxWidth: '100%'}}
-                        src={this.state.articleImgUrl} />
+        if(this.state.articleLoaded) {
+            return (
+                <div className="article-detail-container">
+                    <div className="pet-name" style={{backgroundColor: this.state.article.isMale ? "#d3e7ff" : "#fddcf6"}}>
+                        <Typography variant="h2">{this.state.article.petName}</Typography>
+                    </div>
+                    <Grid container direction="row" spacing={40}>
+                        <Grid item xs={12} sm={6}>
+                            <img className="article-detail-image" src={this.state.articleImgUrl} />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <Grid direction="column" container>
+                                <Grid item className="structured-info-block">
+                                    <Typography variant="h4">{this.state.article.breedName}</Typography>
+                                </Grid>
+                                <Grid item className="structured-info-block">
+                                    <Typography variant="h6">
+                                        {this.state.article.isMale ? "Kocour" : "Kočka"}&nbsp;&middot;&nbsp;
+                                        {this.state.article.petAge} let
+                                    </Typography>
+                                </Grid>
+                                <Grid item className="structured-info-block">
+                                    <Typography variant="h6" style={{display: 'inline-block'}}>
+                                        Vytvořeno: {new Intl.DateTimeFormat('cs-CZ').format(new Date(this.state.article.createDate))}
+                                    </Typography>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                    <Grid container direction="column" spacing={24}>
+                        <Grid item>
+                            {this.state.article.articleText}
+                        </Grid>
+                    </Grid>
                 </div>
-                <div className="article-detail-info">
-                    Article Detail: {this.state.article && this.state.article.petName}
-                </div>
-            </div>
-        )
+            )
+        } else {
+            return <Loader />
+        }
     }
 }

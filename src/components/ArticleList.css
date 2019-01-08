@@ -7,6 +7,9 @@
     text-align: justify;
     position: relative;
 }
+.card-content a {
+    text-decoration: none
+}
 
 /* create the ... */
 .card-content:before {
@@ -39,13 +42,4 @@
     display: flex;
     position: absolute;
     bottom: 0;
-}
-
-.loader-wrapper {
-    text-align: center;
-    margin: 0.5em
-}
-
-.loader {
-    display: inline-block
 }

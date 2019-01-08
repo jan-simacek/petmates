@@ -1,19 +1,23 @@
 .article-detail-container {
+    max-width: 100em;
+    margin: 1.5em;
+}
+
+.article-detail-image {
     max-width: 100%;
-    margin: 10% auto;
-    display: grid;
-    grid-template-columns: 60% auto;
-    grid-template-areas: 'photo info';
-    grid-gap: 0.5em;
+    padding: 0.5em;
+    border-left: 1px solid lightgray;
+    border-right: 1px solid lightgray;
+    border-bottom: 1px solid lightgray;
 }
 
-.article-detail-photo {
-    grid-area: photo;
-    padding: 10px;
-    border: 1px solid lightgray;
-    border-radius: 10px;
+.pet-name {
+    padding: 1em;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
 }
 
-.article-detail-info {
-    grid-area: info
+.structured-info-block {
+    padding-left: 1em;
+    padding-top: 0.5em;
 }
