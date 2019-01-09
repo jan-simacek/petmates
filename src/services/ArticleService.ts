@@ -11,14 +11,16 @@ const NEW_ARTICLE_MUTATION = gql`
         $petAge: Int,
         $isMale: Boolean,
         $imageId: ID!,
-        $articleText: String) {
+        $articleText: String,
+        $userToken: String!) {
     createArticle(articleInput: {
         breedId: $breedId,
         petName: $petName,
         petAge: $petAge,
         isMale: $isMale,
         imageId: $imageId,
-        articleText: $articleText
+        articleText: $articleText,
+        userToken: $userToken
     }) {
       breedId
     }
@@ -37,6 +39,9 @@ const ARTICLES_QUERY = gql`
             createDate
             imageId
             articleText
+            userId
+            userName
+            userPhotoUrl
         }
     }
 `
@@ -53,6 +58,9 @@ export const ARTICLE_QUERY = gql`
             createDate
             imageId
             articleText
+            userId
+            userName
+            userPhotoUrl
         }
     }
 `
@@ -74,7 +82,8 @@ export class ArticleService {
                 petAge: article.petAge,
                 isMale: article.isMale,
                 imageId: article.imageId,
-                articleText: article.articleText
+                articleText: article.articleText,
+                userToken: article.userToken
             }}) as Promise<Article>
     }
 

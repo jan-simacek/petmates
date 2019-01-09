@@ -10,6 +10,7 @@ import './NewArticleForm.css'
 import {ImageUpload} from "./ImageUpload"
 import {fieldToTextField} from 'formik-material-ui'
 import {TextField as MTextField} from '@material-ui/core'
+import { auth } from '../index'
 
 export interface NewArticleFormState {
     breedId: number
@@ -103,13 +104,17 @@ export class NewArticleForm extends Component<any, NewArticleFormState> {
                                 initialValues={this.state}
                                 validate={this.validate}
                                 onSubmit={(values, {setSubmitting}) => {
-                                    this.articleService.addArticle({
-                                        breedId: values.breedId,
-                                        isMale: JSON.parse("" + values.isMale),
-                                        petAge: values.petAge,
-                                        petName: values.petName,
-                                        imageId: values.fileUploaded,
-                                        articleText: values.articleText
+                                    setSubmitting(true)
+                                    auth.currentUser!.getIdToken(true).then(token => {
+                                        this.articleService.addArticle({
+                                            breedId: values.breedId,
+                                            isMale: JSON.parse("" + values.isMale),
+                                            petAge: values.petAge,
+                                            petName: values.petName,
+                                            imageId: values.fileUploaded,
+                                            articleText: values.articleText,
+                                            userToken: token
+                                        })
                                     })
                                     setSubmitting(false)
                                 }}>

@@ -23,13 +23,15 @@ export class ArticleList extends Component<any, ArticleListState> {
         this.state = {articles: [], hasMore: true}
     }
 
+    private loadInProgress = false
+
     render(): ReactNode {
         return (
             <InfiniteScroll
                 pageStart={0}
                 loadMore={this.loadMore.bind(this)}
                 hasMore={this.state.hasMore}
-                loader={<Loader />}>
+                loader={<Loader key="loader" />}>
                 <div className="article-list">
                     <Grid container spacing={24} justify="center">
                         {this.state.articles.map(art => {
@@ -48,12 +50,18 @@ export class ArticleList extends Component<any, ArticleListState> {
     }
 
     private loadMore() {
+        if(this.loadInProgress) {
+            return
+        }
+
         let lastDisplayed = undefined
         if(this.state.articles.length > 0) {
             lastDisplayed = this.state.articles[this.state.articles.length - 1]._id
         }
 
+        this.loadInProgress = true
         articleService.loadArticles(lastDisplayed).then(articles => {
+            this.loadInProgress = false
             const newArticles = this.state.articles.slice().concat(articles)
             this.setState({articles: newArticles, hasMore: articles.length > 0})
         })

@@ -1,6 +1,6 @@
 import { GraphQLScalarType } from 'graphql';
 import { Kind } from 'graphql/language';
-import { Breed, Article, ArticleInput, articleTypeDef } from '../model'
+import { Breed, Article, ArticleInput } from '../model'
 import { Query, Mutation } from "react-apollo";
 import { BreedsService } from './BreedsService';
 import { ArticlesService } from './ArticlesService';

@@ -74,9 +74,13 @@ export class ArticleCard extends React.Component<ArticleCardProps, ArticleCardSt
                 <CardHeader
                     className={this.props.article.isMale ? classes.cardHeaderM : classes.cardHeaderF}
                     avatar={
-                        <Avatar className={classes.avatar} alt="Věk">
-                            {parseFloat("" + Math.round(this.props.article.petAge * 10) / 10)}
-                        </Avatar>
+                        this.props.article.userPhotoUrl ? (
+                            <Avatar className={classes.avatar} alt={this.props.article.userName} src={this.props.article.userPhotoUrl} />
+                        ) :(
+                            <Avatar className={classes.avatar} alt={this.props.article.userName}>
+                                {this.props.article.userName.substring(0,1)}
+                            </Avatar>
+                        )
                     }
                     // action={
                     //   <IconButton>

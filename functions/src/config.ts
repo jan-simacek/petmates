@@ -1,6 +1,7 @@
-import { BreedsService, ResolverService } from './services'
+import { BreedsService, ResolverService, UserService } from './services'
 import { ArticlesService } from './services/ArticlesService';
 
 export const breedsService = new BreedsService() 
-export const articlesService = new ArticlesService(breedsService)
+export const userService = new UserService()
+export const articlesService = new ArticlesService(breedsService, userService)
 export const resolversService = new ResolverService(breedsService, articlesService)

@@ -1,4 +1,4 @@
-export interface ArticleInput {
+export interface ArticleCommon {
     breedId: string
     petName: string
     petAge: number
@@ -7,10 +7,17 @@ export interface ArticleInput {
     articleText: string
 }
 
-export interface Article extends ArticleInput {
+export interface ArticleInput extends ArticleCommon{
+    userToken: string
+}
+
+export interface Article extends ArticleCommon {
     _id: string
     createDate: Date
     breedName: string
+    userId: string
+    userName: string
+    userPhotoUrl: string
 }
 
 export const articleTypeDef = `
@@ -24,6 +31,9 @@ type Article {
     createDate: Date
     imageId: ID!
     articleText: String
+    userId: String!
+    userName: String
+    userPhotoUrl: String
 }
 
 input ArticleInput {
@@ -33,5 +43,6 @@ input ArticleInput {
     isMale: Boolean    
     imageId: ID!
     articleText: String
+    userToken: String!
 }
 `

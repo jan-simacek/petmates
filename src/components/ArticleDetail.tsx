@@ -34,7 +34,10 @@ export class ArticleDetail extends Component<ArticleDetailProps, ArticleDetailSt
             imageId: "",
             isMale: true,
             petAge: 0,
-            petName: ""
+            petName: "",
+            userId: "",
+            userName: "",
+            userPhotoUrl: ""
         }, articleLoaded: false}
         articleService.loadArticleById(this.props.match.params.articleId)
             .then(article => {
