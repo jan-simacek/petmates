@@ -5,10 +5,10 @@ import { amber, orange, yellow } from '@material-ui/core/colors'
 export const theme = createMuiTheme({
     palette: {
         primary: {
-            main: '#ffeebd',
+            main: '#e1e0dd',
           },
           secondary: {
-            main: '#ffe082',
+            main: '#a2e3f5',
           },
     },
     typography: {

@@ -2,3 +2,4 @@
 - loading ikona a disable submit kdyz se nahrava obrazek na server na new article form
 - BARVA kocky!, popis, odmena a dalsi pripadny pole na new article form
 - mazat dovolit jenom fajly ktery vytvoril current user (mluvim o fotce kocky ;)
+- prepis to menu v topbaru na MenuList - to je lip pozicovany

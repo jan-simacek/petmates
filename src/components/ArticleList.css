@@ -1,5 +1,7 @@
 .article-list {
-    margin-top: 1.5em
+    margin-top: 6em;
+    overflow: hidden;
+    padding: 2em;
 }
 .card-content {
     max-height: 75px;

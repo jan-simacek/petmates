@@ -165,7 +165,7 @@ export class NewArticleForm extends Component<any, NewArticleFormState> {
                                                 <Field name="fileUploaded" component={ImageUpload} />
                                                 {errors.fileUploaded && <Typography style={{fontSize: '0.75rem'}} color="error">{errors.fileUploaded}</Typography>}
                                             </Grid>
-                                            <Button variant="contained" color="primary" type="submit"
+                                            <Button variant="contained" color="secondary" type="submit"
                                                     disabled={isSubmitting} style={{alignSelf: 'center'}}>Odeslat</Button>
                                         </Grid>
                                     </Form>)

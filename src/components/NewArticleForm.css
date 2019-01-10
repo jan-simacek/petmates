@@ -2,10 +2,9 @@
     background-image: url("/images/new-article-background-resized.jpg");
     background-size: contain;
     background-position: top center;
-    background-color: #ffeebd;
-    position: absolute;
     width: 100%;
     background-repeat: no-repeat;
+    overflow: hidden;
 }
 
 .new-article-form {

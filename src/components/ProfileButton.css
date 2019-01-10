@@ -1,0 +1,11 @@
+.avatar {
+    display: inline-block !important;
+}
+
+.dropdown-arrow {
+    color: gray;
+}
+
+.profile-container {
+    display: flex;
+}

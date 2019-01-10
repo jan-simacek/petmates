@@ -1,6 +1,7 @@
 import React, { Component, ReactNode } from "react";
 import { withStyles, AppBar, Toolbar, IconButton, Typography, Button } from "@material-ui/core";
 import MenuIcon from '@material-ui/icons/Menu';
+import { ProfileButton } from "./ProfileButton";
 
 const styles = {
     root: {
@@ -24,20 +25,13 @@ class TopBar extends Component {
 
     public render(): ReactNode {
         return (
-            // <div className={this.classes.root}>
-            //   <AppBar position="static">
-            //     <Toolbar>
-            //       <Button color="inherit">Login</Button>
-            //     </Toolbar>
-            //   </AppBar>
-            // </div>
             <div className={this.classes.root}>
-                <AppBar position="static">
+                <AppBar position="fixed">
                     <Toolbar>
                         <Typography variant="h6" color="inherit" className={this.classes.grow}>
                             News
                         </Typography>
-                        <Button color="inherit">Login</Button>
+                        <ProfileButton />
                     </Toolbar>
                 </AppBar>
             </div>
