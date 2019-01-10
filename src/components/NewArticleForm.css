@@ -2,12 +2,10 @@
     background-image: url("/images/new-article-background-resized.jpg");
     background-size: contain;
     background-position: top center;
-    background-color: #ffdab99e;
+    background-color: #ffeebd;
     position: absolute;
     width: 100%;
     background-repeat: no-repeat;
-    top: 0;
-    bottom: 0;
 }
 
 .new-article-form {

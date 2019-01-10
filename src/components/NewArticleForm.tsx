@@ -128,8 +128,7 @@ export class NewArticleForm extends Component<any, NewArticleFormState> {
                                             <Grid item lg>
                                                 <FormControl style={{width: '100%'}} error={!!errors.breedId}>
                                                     <InputLabel htmlFor="breedId">Plemeno</InputLabel>
-                                                    <Field component={Select} name="breedId" label="Plemeno"
-                                                           validate={(value: any) => validateValue(value)}>
+                                                    <Field component={Select} name="breedId" label="Plemeno">
                                                         {data!!.breeds.sort((a,b) => a.breedName.localeCompare(b.breedName))
                                                             .map(breed => <MenuItem value={breed.breedId} key={breed.breedId}
                                                                                                 >{breed.breedName}</MenuItem>)}

@@ -2,4 +2,3 @@
 - loading ikona a disable submit kdyz se nahrava obrazek na server na new article form
 - BARVA kocky!, popis, odmena a dalsi pripadny pole na new article form
 - mazat dovolit jenom fajly ktery vytvoril current user (mluvim o fotce kocky ;)
-- v tom avatarovi prihlasenyho uzivatele - myslim ze to user photo id nemusi dycky existovat
