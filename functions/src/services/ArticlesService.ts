@@ -5,6 +5,10 @@ import { UserService } from './UserService';
 
 const PAGE_SIZE = 3
 
+interface ArticleFilter {
+    sex?: string
+}
+
 export class ArticlesService {
     constructor(private breedsService: BreedsService, private userService: UserService){}
 
@@ -25,11 +29,12 @@ export class ArticlesService {
         return articles.docs[0]
     }
 
-    public async loadAllArticles(lastDisplayedArticleId: string): Promise<Article[]> {
+    public async loadAllArticles(lastDisplayedArticleId?: string, articleFilter?: ArticleFilter): Promise<Article[]> {
         let query = admin
             .firestore()
             .collection('articles')
             .orderBy("createDate", 'desc')
+        query = ArticlesService.addFilterToQuery(query, articleFilter)
 
         if(lastDisplayedArticleId) {
             const lastDisplayedArticle = await this.loadArticleDocById(lastDisplayedArticleId)
@@ -40,6 +45,19 @@ export class ArticlesService {
             .limit(PAGE_SIZE)
             .get()
         return articles.docs.map(article => this.articleDataToArticle(article)) as Article[]
+    }
+
+    private static addFilterToQuery(query: FirebaseFirestore.Query, articleFilter?: ArticleFilter): FirebaseFirestore.Query {
+        if(!articleFilter){
+            return query
+        }
+
+        let result = query
+        if(articleFilter.sex) {
+            result = result.where('isMale', '==', articleFilter.sex == 'male')
+        }
+        
+        return result
     }
 
     private articleDataToArticle(articleData: any): Article {

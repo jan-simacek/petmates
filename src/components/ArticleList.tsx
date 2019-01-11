@@ -1,31 +1,53 @@
 import './ArticleList.css'
 import React, { Component, ReactNode } from "react";
-import { Query } from "react-apollo";
-import { ArticleListResponse, Article } from "../model";
-import gql from "graphql-tag";
+import { Article } from "../model";
 import ArticleCard from "./ArticleCard";
-import { Grid, Typography, CircularProgress } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import { articleService } from '../index'
 import InfiniteScroll from 'react-infinite-scroller'
-import { Link } from "react-router-dom";
+import { Link, match, withRouter } from "react-router-dom";
 import { Loader } from './Loader';
-
-class ArticleListQuery extends Query<ArticleListResponse> { }
+import { ArticleFilter } from '../services';
 
 interface ArticleListState {
     articles: Article[]
     hasMore: boolean
+    filterState: ArticleFilter
 }
 
-export class ArticleList extends Component<any, ArticleListState> {
-    constructor(props: any) {
+interface ArticleListRouteParams {
+    sex?: string
+}
+
+interface ArticleListProps {
+    match: match<ArticleListRouteParams>
+    history: any
+    location: any
+}
+
+export class ArticleList extends Component<ArticleListProps, ArticleListState> {
+    constructor(props: ArticleListProps) {
         super(props)
-        this.state = {articles: [], hasMore: true}
+        this.state = {
+            articles: [], 
+            hasMore: true, 
+            filterState: {
+                sex: this.props.match.params.sex
+            }
+        }
     }
 
     private loadInProgress = false
 
-    render(): ReactNode {
+    public componentWillReceiveProps(nextProps: ArticleListProps) {
+        this.setState({ 
+            filterState: { sex: nextProps.match.params.sex },
+            articles: [],
+            hasMore: true
+        })
+    }
+
+    public render(): ReactNode {
         return (
             <InfiniteScroll
                 pageStart={0}
@@ -60,7 +82,7 @@ export class ArticleList extends Component<any, ArticleListState> {
         }
 
         this.loadInProgress = true
-        articleService.loadArticles(lastDisplayed).then(articles => {
+        articleService.loadArticles(lastDisplayed, this.state.filterState).then(articles => {
             this.loadInProgress = false
             const newArticles = this.state.articles.slice().concat(articles)
             this.setState({articles: newArticles, hasMore: articles.length > 0})

@@ -1,20 +1,17 @@
 .article-detail-container {
     max-width: 100em;
-    margin: 1.5em;
+    margin: 6em;
+    padding-left: 1em;
 }
 
 .article-detail-image {
     max-width: 100%;
     padding: 0.5em;
-    border-left: 1px solid lightgray;
-    border-right: 1px solid lightgray;
-    border-bottom: 1px solid lightgray;
+    border: 1px solid lightgray;
 }
 
 .pet-name {
     padding: 1em;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
 }
 
 .structured-info-block {

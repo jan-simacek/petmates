@@ -51,15 +51,16 @@ export class ArticleDetail extends Component<ArticleDetailProps, ArticleDetailSt
         if(this.state.articleLoaded) {
             return (
                 <div className="article-detail-container">
-                    <div className="pet-name" style={{backgroundColor: this.state.article.isMale ? "#d3e7ff" : "#fddcf6"}}>
-                        <Typography variant="h2">{this.state.article.petName}</Typography>
-                    </div>
+                    
                     <Grid container direction="row" spacing={40}>
-                        <Grid item xs={12} sm={6}>
+                        <Grid item sm={12} md={6}>
                             <img className="article-detail-image" src={this.state.articleImgUrl} />
                         </Grid>
-                        <Grid item xs={12} sm={6}>
+                        <Grid item sm={12} md={6}>
                             <Grid direction="column" container>
+                                <div className="pet-name" style={{backgroundColor: this.state.article.isMale ? "#d3e7ff" : "#fddcf6"}}>
+                                    <Typography variant="h2">{this.state.article.petName}</Typography>
+                                </div>
                                 <Grid item className="structured-info-block">
                                     <Typography variant="h4">{this.state.article.breedName}</Typography>
                                 </Grid>

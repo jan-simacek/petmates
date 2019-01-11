@@ -118,7 +118,7 @@ export class NewArticleForm extends Component<any, NewArticleFormState> {
                                     })
                                     setSubmitting(false)
                                 }}>
-                                {({errors, isSubmitting}) => {
+                                {({errors, touched, isSubmitting}) => {
                                     return (
                                     <Form className="new-article-form">
                                         <Grid container spacing={24} style={{padding: 24}} direction="column">
@@ -133,7 +133,7 @@ export class NewArticleForm extends Component<any, NewArticleFormState> {
                                                             .map(breed => <MenuItem value={breed.breedId} key={breed.breedId}
                                                                                                 >{breed.breedName}</MenuItem>)}
                                                     </Field>
-                                                    {errors.breedId && <Typography style={{fontSize: '0.75rem'}} color="error">{errors.breedId}</Typography>}
+                                                    {errors.breedId && touched.breedId && <Typography style={{fontSize: '0.75rem'}} color="error">{errors.breedId}</Typography>}
                                                 </FormControl>
                                             </Grid>
                                             <Grid item lg>
@@ -163,7 +163,7 @@ export class NewArticleForm extends Component<any, NewArticleFormState> {
                                             </Grid>
                                             <Grid item>
                                                 <Field name="fileUploaded" component={ImageUpload} />
-                                                {errors.fileUploaded && <Typography style={{fontSize: '0.75rem'}} color="error">{errors.fileUploaded}</Typography>}
+                                                {errors.fileUploaded && touched.fileUploaded&& <Typography style={{fontSize: '0.75rem'}} color="error">{errors.fileUploaded}</Typography>}
                                             </Grid>
                                             <Button variant="contained" color="secondary" type="submit"
                                                     disabled={isSubmitting} style={{alignSelf: 'center'}}>Odeslat</Button>

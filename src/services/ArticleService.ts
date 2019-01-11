@@ -28,8 +28,8 @@ const NEW_ARTICLE_MUTATION = gql`
 `
 
 const ARTICLES_QUERY = gql`
-    query Articles($lastDisplayedId: ID) {
-        articles(lastDisplayedId: $lastDisplayedId) {
+    query Articles($lastDisplayedId: ID, $sex: String) {
+        articles(lastDisplayedId: $lastDisplayedId, sex: $sex) {
             _id
             breedName
             breedId
@@ -72,6 +72,10 @@ interface ArticleQueryResponse {
     article: Article
 }
 
+export interface ArticleFilter {
+    sex?: string
+}
+
 export class ArticleService {
     constructor(private apolloClient: ApolloClient<NormalizedCacheObject>) {}
 
@@ -87,9 +91,15 @@ export class ArticleService {
             }}) as Promise<Article>
     }
 
-    public async loadArticles(lastDisplayedId?: string): Promise<Article[]> {
+    public async loadArticles(lastDisplayedId?: string, filter?: ArticleFilter): Promise<Article[]> {
         const response = await this.apolloClient
-            .query<ArticleListQueryResponse>({query: ARTICLES_QUERY, variables: {'lastDisplayedId': lastDisplayedId}})
+            .query<ArticleListQueryResponse>({
+                query: ARTICLES_QUERY, 
+                variables: { 
+                    lastDisplayedId: lastDisplayedId, 
+                    sex: filter && filter.sex 
+                }
+            })
         if(response.errors) {
             throw new Error("Problem when loading articles: " + response.errors)
         }

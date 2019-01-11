@@ -1,19 +1,30 @@
 .new-article-background {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 4em;
+}
+
+.new-article-form {
+    align-self: center;
+    background: white;
+    box-shadow: 0 37.125px 70px -12.125px rgba(0,0,0,0.3);
+    width: 100%;
+    max-width: 60em;
+}
+
+.new-article-heading {
     background-image: url("/images/new-article-background-resized.jpg");
     background-size: contain;
     background-position: top center;
     width: 100%;
     background-repeat: no-repeat;
-    overflow: hidden;
+    padding: 3em 2em;
 }
 
-.new-article-form {
-    max-width: 700px;
-    margin: 10% auto;
-    background: white;
-    box-shadow: 0 37.125px 70px -12.125px rgba(0,0,0,0.3);
-}
-
-.new-article-heading {
-    margin: 5% 5%;
+@media only screen and (max-width: 600px) {
+    .new-article-heading {
+        background-size: cover;
+    }
 }

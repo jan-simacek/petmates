@@ -3,3 +3,4 @@
 - BARVA kocky!, popis, odmena a dalsi pripadny pole na new article form
 - mazat dovolit jenom fajly ktery vytvoril current user (mluvim o fotce kocky ;)
 - prepis to menu v topbaru na MenuList - to je lip pozicovany
+- napsat firestore indexy do json - ted sou naklikany v ui, ale to by sem to musel klikat znova pro hafbook
