@@ -1,0 +1,22 @@
+.breed-form-control { 
+    width: 100%;
+}
+
+.filter-grid {
+    padding-top: 1em;
+    padding-bottom: 2em;
+    margin-bottom: 2em;
+    border: 1px solid gray;
+    position: relative;
+}
+
+.minimize-button {
+    position: absolute;
+    bottom: 0.1em;
+    right: 0.2em;
+}
+.expand-filter-button {
+    margin-bottom: 2em;
+    display: flex;
+    justify-content: center;
+}

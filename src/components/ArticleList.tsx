@@ -7,41 +7,52 @@ import { articleService } from '../index'
 import InfiniteScroll from 'react-infinite-scroller'
 import { Link, match, withRouter } from "react-router-dom";
 import { Loader } from './Loader';
-import { ArticleFilter } from '../services';
+import { ArticleListFilter } from '../services';
+import { Filter } from '.';
+import { FilterState } from './Filter';
+import { Routes } from './Routes';
+import { History } from 'history';
+
 
 interface ArticleListState {
     articles: Article[]
     hasMore: boolean
-    filterState: ArticleFilter
+    filterState: ArticleListFilter
 }
 
 interface ArticleListRouteParams {
     sex?: string
+    breedId?: string
 }
 
 interface ArticleListProps {
     match: match<ArticleListRouteParams>
-    history: any
+    history: History
     location: any
 }
 
 export class ArticleList extends Component<ArticleListProps, ArticleListState> {
+    private loadInProgress = false
+
     constructor(props: ArticleListProps) {
         super(props)
         this.state = {
             articles: [], 
             hasMore: true, 
-            filterState: {
-                sex: this.props.match.params.sex
-            }
+            filterState: this.routeParamsToArticleFilter(this.props.match.params)
         }
     }
 
-    private loadInProgress = false
+    private routeParamsToArticleFilter(routeParams: ArticleListRouteParams): ArticleListFilter {
+        return {
+            sex: routeParams.sex,
+            breedId: routeParams.breedId
+        }
+    }
 
     public componentWillReceiveProps(nextProps: ArticleListProps) {
         this.setState({ 
-            filterState: { sex: nextProps.match.params.sex },
+            filterState: this.routeParamsToArticleFilter(nextProps.match.params),
             articles: [],
             hasMore: true
         })
@@ -55,6 +66,7 @@ export class ArticleList extends Component<ArticleListProps, ArticleListState> {
                 hasMore={this.state.hasMore}
                 loader={<Loader key="loader" />}>
                 <div className="article-list">
+                    <Filter onChanged={(filterState) => this.navigateWithFilterState(filterState)} routeBreedId={this.state.filterState.breedId}/>
                     <Grid container spacing={24} justify="center">
                         {this.state.articles.map(art => {
                             return (
@@ -69,6 +81,10 @@ export class ArticleList extends Component<ArticleListProps, ArticleListState> {
                 </div>
             </InfiniteScroll>
         )
+    }
+
+    private navigateWithFilterState(filterState: FilterState) {
+        this.props.history.push(Routes.getArticleListRoute(this.state.filterState.sex, filterState.breedId))
     }
 
     private loadMore() {

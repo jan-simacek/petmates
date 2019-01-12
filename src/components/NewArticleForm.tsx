@@ -11,6 +11,8 @@ import {ImageUpload} from "./ImageUpload"
 import {fieldToTextField} from 'formik-material-ui'
 import {TextField as MTextField} from '@material-ui/core'
 import { auth } from '../index'
+import { BreedQuery, BREED_QUERY } from '.';
+import { Loader } from './Loader';
 
 export interface NewArticleFormState {
     breedId: number
@@ -20,17 +22,6 @@ export interface NewArticleFormState {
     fileUploaded?: string
     articleText: string
 }
-
-class BreedQuery extends Query<BreedsResponse> {}
-
-const BREED_QUERY = gql`
-    {
-      breeds {
-        breedId,
-        breedName
-      }
-    }
-`
 
 const validateValue = (value: any) =>  {
     return value && value != "" ? undefined : "Toto pole je povinné"
@@ -93,7 +84,7 @@ export class NewArticleForm extends Component<any, NewArticleFormState> {
         return (
             <BreedQuery query={BREED_QUERY}>
                 {({loading, error, data}) => {
-                    if (loading) return <div>Fetching</div>
+                    if (loading) return <Loader />
                     if (error) return <div>Error</div>
                     return (
                         <div className="new-article-background">
@@ -126,12 +117,17 @@ export class NewArticleForm extends Component<any, NewArticleFormState> {
                                                 <MyField name="petName" component={TextField} label="Jméno mazlíčka" />
                                             </Grid>
                                             <Grid item lg>
-                                                <FormControl style={{width: '100%'}} error={!!errors.breedId}>
+                                                <FormControl style={{width: '100%'}} error={!!errors.breedId && !!touched.breedId}>
                                                     <InputLabel htmlFor="breedId">Plemeno</InputLabel>
                                                     <Field component={Select} name="breedId" label="Plemeno">
-                                                        {data!!.breeds.sort((a,b) => a.breedName.localeCompare(b.breedName))
-                                                            .map(breed => <MenuItem value={breed.breedId} key={breed.breedId}
-                                                                                                >{breed.breedName}</MenuItem>)}
+                                                        {data!.breeds.sort((a,b) => a.breedName.localeCompare(b.breedName))
+                                                            .map(breed => (
+                                                                    <MenuItem value={breed.breedId} key={breed.breedId}>
+                                                                        {breed.breedName}
+                                                                    </MenuItem>
+                                                                )
+                                                            )
+                                                        }
                                                     </Field>
                                                     {errors.breedId && touched.breedId && <Typography style={{fontSize: '0.75rem'}} color="error">{errors.breedId}</Typography>}
                                                 </FormControl>

@@ -4,7 +4,7 @@ import { Switch, Route } from "react-router";
 
 export enum RoutesEnum {
     NEW_ARTICLE = "/new-article",
-    ARTICLE_LIST = "/article-list/:sex?",
+    ARTICLE_LIST = "/article-list/:sex?/:breedId?",
     ARTICLE_DETAIL = "/article/:articleId"
 }
 
@@ -19,7 +19,7 @@ export class Routes extends React.Component {
         )
     }
 
-    public static getArticleListRoute(sex?: string): string {
-        return RoutesEnum.ARTICLE_LIST.replace(":sex", sex || "")
+    public static getArticleListRoute(sex?: string, breedId?: string): string {
+        return RoutesEnum.ARTICLE_LIST.replace(":sex?", sex || "").replace(":breedId?", breedId || "")
     }
 }

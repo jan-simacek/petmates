@@ -34,7 +34,8 @@ export class ResolverService {
                 async articles(_rootValue, args): Promise<Article[]> {
                     const lastDisplayedId = args.lastDisplayedId as string
                     const sex = args.sex as string
-                    return that.articlesService.loadAllArticles(lastDisplayedId, {sex})
+                    const breedId = args.breedId as number
+                    return that.articlesService.loadAllArticles(lastDisplayedId, {sex, breedId})
                 },
                 async article(_rootValue, args): Promise<Article> {
                     return that.articlesService.loadArticleById(args.articleId)

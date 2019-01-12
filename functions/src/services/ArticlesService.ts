@@ -7,6 +7,7 @@ const PAGE_SIZE = 3
 
 interface ArticleFilter {
     sex?: string
+    breedId?: number
 }
 
 export class ArticlesService {
@@ -56,7 +57,9 @@ export class ArticlesService {
         if(articleFilter.sex) {
             result = result.where('isMale', '==', articleFilter.sex == 'male')
         }
-        
+        if(articleFilter.breedId) {
+            result = result.where('breedId', '==', articleFilter.breedId)
+        }
         return result
     }
 
