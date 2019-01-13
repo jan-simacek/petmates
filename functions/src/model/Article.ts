@@ -1,8 +1,9 @@
 export interface ArticleCommon {
-    breedId: string
+    breedId: number
     petName: string
     petAge: number
     isMale: boolean
+    regionId: number
     imageId: string
     articleText: string
 }
@@ -17,6 +18,7 @@ export interface Article extends ArticleCommon {
     breedName: string
     userId: string
     userName: string
+    regionName: string
     userPhotoUrl: string
 }
 
@@ -24,10 +26,12 @@ export const articleTypeDef = `
 type Article {
     _id: ID!
     breedName: String
-    breedId: ID!
+    breedId: Int!
     petName: String!
     petAge: Int
     isMale: Boolean
+    regionId: ID!
+    regionName: String
     createDate: Date
     imageId: ID!
     articleText: String
@@ -37,11 +41,12 @@ type Article {
 }
 
 input ArticleInput {
-    breedId: ID!
+    breedId: Int!
     petName: String!
     petAge: Int
-    isMale: Boolean    
+    isMale: Boolean
     imageId: ID!
+    regionId: ID!
     articleText: String
     userToken: String!
 }

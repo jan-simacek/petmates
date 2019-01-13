@@ -17,6 +17,7 @@ export interface ArticleCommon {
     petAge: number
     isMale: boolean
     imageId: string
+    regionId: number
     articleText: string
 }
 

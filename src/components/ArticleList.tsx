@@ -46,7 +46,7 @@ export class ArticleList extends Component<ArticleListProps, ArticleListState> {
     private routeParamsToArticleFilter(routeParams: ArticleListRouteParams): ArticleListFilter {
         return {
             sex: routeParams.sex,
-            breedId: routeParams.breedId
+            breedId: routeParams.breedId && +routeParams.breedId || undefined
         }
     }
 

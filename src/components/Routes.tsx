@@ -19,7 +19,7 @@ export class Routes extends React.Component {
         )
     }
 
-    public static getArticleListRoute(sex?: string, breedId?: string): string {
-        return RoutesEnum.ARTICLE_LIST.replace(":sex?", sex || "").replace(":breedId?", breedId || "")
+    public static getArticleListRoute(sex?: string, breedId?: number): string {
+        return RoutesEnum.ARTICLE_LIST.replace(":sex?", sex || "").replace(":breedId?", ("" + breedId) || "")
     }
 }

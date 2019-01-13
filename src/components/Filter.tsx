@@ -1,11 +1,12 @@
 import './Filter.css'
 import React, { ReactNode, Fragment } from "react";
 import { Grid, FormControl, InputLabel, Select, MenuItem, Button, Collapse, Typography } from "@material-ui/core";
-import { BreedQuery, BREED_QUERY, Loader } from ".";
+import { Loader } from ".";
 import { ArrowDropUp, ArrowDropDown } from '@material-ui/icons';
+import { BreedQuery, BREED_QUERY } from './queries';
 
 export interface FilterState {
-    breedId: string
+    breedId: number
 }
 
 interface FilterComponentState {
@@ -15,13 +16,13 @@ interface FilterComponentState {
 
 interface FilterProps {
     onChanged: (newFilter: FilterState) => void
-    routeBreedId?: string
+    routeBreedId?: number
 }
 
 export class Filter extends React.Component<FilterProps, FilterComponentState> {
     constructor(props: FilterProps) {
         super(props)
-        this.state = {filter: { breedId: props.routeBreedId || "" }, collapsed: true }
+        this.state = {filter: { breedId: props.routeBreedId || 0 }, collapsed: true }
     }
 
     public render(): ReactNode {
@@ -77,7 +78,8 @@ export class Filter extends React.Component<FilterProps, FilterComponentState> {
     }
 
     private breedSelectChanged(event: any) {
-        this.setStateAndFireOnChange({ filter: { ...this.state.filter,  breedId: event.target.value }})
+        const selectedBreedId = event.target.value
+        this.setStateAndFireOnChange({ filter: { ...this.state.filter,  breedId: selectedBreedId && +selectedBreedId || undefined }})
     }
 
     private setStateAndFireOnChange(newState: any) {

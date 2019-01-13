@@ -1,5 +1,5 @@
 import React, { Component, ReactNode } from "react";
-import { Button, Avatar, Icon, Menu, MenuItem, IconButton, Fade } from "@material-ui/core";
+import { Button, Avatar, Menu, MenuItem, IconButton, Fade } from "@material-ui/core";
 import { User } from "firebase";
 import { auth, provider } from "../index";
 import { ArrowDropDown } from '@material-ui/icons'

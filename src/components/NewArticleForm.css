@@ -4,7 +4,7 @@
     flex-direction: column;
     justify-content: center;
     margin-top: 4em;
-    margin-bottom: 4em;
+    padding-bottom: 4em;
 }
 
 .new-article-form {
@@ -13,6 +13,7 @@
     box-shadow: 0 37.125px 70px -12.125px rgba(0,0,0,0.3);
     width: 100%;
     max-width: 60em;
+    padding-bottom: 2em;
 }
 
 .new-article-heading {

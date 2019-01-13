@@ -6,10 +6,11 @@ import { Query, QueryProps } from 'react-apollo';
 
 const NEW_ARTICLE_MUTATION = gql`
   mutation NewArticleMutation(
-        $breedId: ID!,
+        $breedId: Int!,
         $petName: String!,
         $petAge: Int,
         $isMale: Boolean,
+        $regionId: ID!
         $imageId: ID!,
         $articleText: String,
         $userToken: String!) {
@@ -18,6 +19,7 @@ const NEW_ARTICLE_MUTATION = gql`
         petName: $petName,
         petAge: $petAge,
         isMale: $isMale,
+        regionId: $regionId,
         imageId: $imageId,
         articleText: $articleText,
         userToken: $userToken
@@ -28,7 +30,7 @@ const NEW_ARTICLE_MUTATION = gql`
 `
 
 const ARTICLES_QUERY = gql`
-    query Articles($lastDisplayedId: ID, $sex: String, $breedId: String) {
+    query Articles($lastDisplayedId: ID, $sex: String, $breedId: Int) {
         articles(lastDisplayedId: $lastDisplayedId, sex: $sex, breedId: $breedId) {
             _id
             breedName
@@ -74,7 +76,7 @@ interface ArticleQueryResponse {
 
 export interface ArticleListFilter {
     sex?: string
-    breedId?: string
+    breedId?: number
 }
 
 export class ArticleService {
@@ -86,6 +88,7 @@ export class ArticleService {
                 petName: article.petName,
                 petAge: article.petAge,
                 isMale: article.isMale,
+                regionId: article.regionId,
                 imageId: article.imageId,
                 articleText: article.articleText,
                 userToken: article.userToken

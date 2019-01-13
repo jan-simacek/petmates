@@ -7,7 +7,7 @@ export interface Breed {
 export const breedTypeDef = `
 type Breed {
     _id: ID!
-    breedId: ID!
+    breedId: Int!
     breedName: String!
 }
 `

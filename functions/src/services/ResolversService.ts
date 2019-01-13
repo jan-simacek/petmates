@@ -4,9 +4,11 @@ import { Breed, Article, ArticleInput } from '../model'
 import { Query, Mutation } from "react-apollo";
 import { BreedsService } from './BreedsService';
 import { ArticlesService } from './ArticlesService';
+import { Region } from '../model/Region';
+import { RegionsService } from './RegionsService';
 
 export class ResolverService {
-    constructor(private breedService: BreedsService, private articlesService: ArticlesService) { }
+    constructor(private breedService: BreedsService, private articlesService: ArticlesService, private regionsService: RegionsService) { }
 
     public getResolvers(): any {
         const that = this
@@ -39,6 +41,9 @@ export class ResolverService {
                 },
                 async article(_rootValue, args): Promise<Article> {
                     return that.articlesService.loadArticleById(args.articleId)
+                },
+                async regions(_rootValue, args): Promise<Region[]> {
+                    return that.regionsService.loadAllRegions()
                 }
             },
             Mutation: {

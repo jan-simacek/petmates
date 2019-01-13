@@ -33,6 +33,7 @@ export class ArticleDetail extends Component<ArticleDetailProps, ArticleDetailSt
             createDate: new Date(),
             imageId: "",
             isMale: true,
+            regionId: 0,
             petAge: 0,
             petName: "",
             userId: "",
