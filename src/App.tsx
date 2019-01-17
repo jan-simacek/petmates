@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import TopBar from './components/TopBar';
 import { Routes } from './components/Routes';
-
+import { Provider } from 'react-redux'
 
 class App extends Component {
     render(): React.ReactNode {

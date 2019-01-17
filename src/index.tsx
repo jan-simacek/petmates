@@ -12,6 +12,8 @@ import {theme} from "./theme/theme";
 import {MuiThemeProvider} from '@material-ui/core';
 import firebase from 'firebase';
 import { BrowserRouter } from 'react-router-dom'
+import { Provider } from 'react-redux';
+import store from './store';
 
 var config = {
     apiKey: "AIzaSyCDSVW5vzFgauiBIhGQFdP0CC6Oy1AWeVQ",
@@ -33,7 +35,9 @@ ReactDOM.render(
     <BrowserRouter>
         <MuiThemeProvider theme={theme}>
             <ApolloProvider client={client}>
-                <App />
+                <Provider store={store}>
+                    <App />
+                </Provider>
             </ApolloProvider>
         </MuiThemeProvider>
     </BrowserRouter>,

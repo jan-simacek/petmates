@@ -4,6 +4,7 @@ import { User } from "firebase";
 import { auth, provider } from "../index";
 import { ArrowDropDown } from '@material-ui/icons'
 import './ProfileButton.css'
+import { Dispatch } from 'redux'
 
 interface ProfileButtonState {
     user?: User
@@ -34,7 +35,8 @@ export class ProfileButton extends Component<any, ProfileButtonState> {
         auth.onAuthStateChanged((user) => {
             if (user) {
                 this.setState({ user , waitWithRender: false});
-            } 
+            }
+            
         });
         setTimeout(() => this.setState({waitWithRender: false}), 3500)
     }
