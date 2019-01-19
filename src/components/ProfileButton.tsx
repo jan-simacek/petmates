@@ -9,7 +9,7 @@ import { CurrentUser } from "../reducers";
 
 interface ProfileButtonState {
     anchorEl: any
-    waitWithRender: boolean
+    startRender: boolean
 }
 
 interface ProfileButtonProps {
@@ -17,10 +17,13 @@ interface ProfileButtonProps {
     storeUser: (user?: CurrentUser) => void
 }
 
+export const RENDER_TIMEOUT = 3500
+export const FADEIN_SPEED = 1500
 export class ProfileButton extends Component<ProfileButtonProps, ProfileButtonState> {
+    
     constructor(props: any){
         super(props)
-        this.state = {anchorEl: undefined, waitWithRender: true }
+        this.state = {anchorEl: undefined, startRender: false }
     }
 
     private login() {
@@ -37,12 +40,12 @@ export class ProfileButton extends Component<ProfileButtonProps, ProfileButtonSt
     public componentDidMount() {
         auth.onAuthStateChanged((user) => {
             if (user) {
-                this.setState({ waitWithRender: false});
+                this.setState({ startRender: true});
                 this.props.storeUser({displayName: user.displayName!, uid: user.uid, photoURL: user.photoURL || undefined})
             }
             
         });
-        setTimeout(() => this.setState({waitWithRender: false}), 3500)
+        setTimeout(() => this.setState({startRender: true}), RENDER_TIMEOUT)
     }
     
     private openMenu(event: any) {
@@ -60,7 +63,7 @@ export class ProfileButton extends Component<ProfileButtonProps, ProfileButtonSt
 
     public render(): ReactNode {
         return (
-            !this.state.waitWithRender && <Fade in={true} timeout={1500}>
+            this.state.startRender && <Fade in={true} timeout={FADEIN_SPEED}>
                 <div>
                     {this.props.user ? 
                         (<div className="profile-container">{this.props.user.photoURL ? 

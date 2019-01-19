@@ -7,6 +7,7 @@ import './TopBar.css'
 import ProfileButtonContainer from "./ProfileButtonContainer";
 import { CurrentUser } from "../reducers";
 import { LoginAlert } from "./LoginAlert";
+import { NewArticleButton } from "./NewArticleButton";
 
 const styles = {
     root: {
@@ -30,6 +31,7 @@ const styles = {
 
 interface TopBarState {
     loginAlertOpen: boolean
+    renderNewArticleBtn: boolean
 }
 
 interface TopBarProps {
@@ -41,7 +43,7 @@ class TopBar extends Component<TopBarProps, TopBarState> {
     constructor(props: any) {
         super(props)
         this.classes = props.classes;
-        this.state = { loginAlertOpen: false }
+        this.state = { loginAlertOpen: false, renderNewArticleBtn: false }
     }
 
     private showLoginAlert() {
@@ -67,9 +69,7 @@ class TopBar extends Component<TopBarProps, TopBarState> {
                             <Typography variant="h6">Kocouři</Typography>
                         </NavLink>
                         <span className={this.classes.grow}>&nbsp;</span>
-                        {this.props.currentUser ? (<NavLink to={RoutesEnum.NEW_ARTICLE} style={{textDecoration: 'none'}} className="new-article-btn">
-                            <Button variant="contained" color="secondary">NOVÝ INZERÁT</Button>
-                        </NavLink>) : (<Button variant="contained" style={{marginRight: '1.5em'}} color="secondary" onClick={this.showLoginAlert.bind(this)}>NOVÝ INZERÁT</Button>)}
+                        <NewArticleButton currentUser={this.props.currentUser} showLoginAlert={this.showLoginAlert.bind(this)} />
                         <ProfileButtonContainer />
                         <LoginAlert open={this.state.loginAlertOpen} onClose={this.hideLoginAlert.bind(this)} />
                     </Toolbar>
