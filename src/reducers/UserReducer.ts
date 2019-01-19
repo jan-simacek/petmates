@@ -4,7 +4,8 @@ import { Reducer } from 'redux';
 
 export interface CurrentUser {
     uid: string,
-    photoURL: string
+    photoURL?: string,
+    displayName: string
 }
 
 export interface UserState { 
@@ -25,5 +26,7 @@ const userReducer: Reducer<UserState, Action<CurrentUser>> = (state: UserState =
         default: return state
     }
 }
+
+export const selectCurrentUser = (userState: UserState) => userState.currentUser
 
 export default userReducer

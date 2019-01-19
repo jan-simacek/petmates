@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import './App.css';
-import TopBar from './components/TopBar';
 import { Routes } from './components/Routes';
-import { Provider } from 'react-redux'
+import TopBar from './components/TopBar';
+import TopBarContainer from './components/TopBarContainer';
 
 class App extends Component {
     render(): React.ReactNode {
         return (
             <div className="App">
                 <div className="header">
-                    <TopBar />
+                    <TopBarContainer />
                     <Routes />
                 </div>
             </div>

@@ -5,17 +5,22 @@ import { auth, provider } from "../index";
 import { ArrowDropDown } from '@material-ui/icons'
 import './ProfileButton.css'
 import { Dispatch } from 'redux'
+import { CurrentUser } from "../reducers";
 
 interface ProfileButtonState {
-    user?: User
     anchorEl: any
     waitWithRender: boolean
 }
 
-export class ProfileButton extends Component<any, ProfileButtonState> {
+interface ProfileButtonProps {
+    user?: CurrentUser,
+    storeUser: (user?: CurrentUser) => void
+}
+
+export class ProfileButton extends Component<ProfileButtonProps, ProfileButtonState> {
     constructor(props: any){
         super(props)
-        this.state = {user: undefined, anchorEl: undefined, waitWithRender: true }
+        this.state = {anchorEl: undefined, waitWithRender: true }
     }
 
     private login() {
@@ -25,16 +30,15 @@ export class ProfileButton extends Component<any, ProfileButtonState> {
     private logout() {
         auth.signOut()
         .then(() => {
-          this.setState({
-            user: undefined
-          });
+          this.props.storeUser(undefined);
         });
     }
 
     public componentDidMount() {
         auth.onAuthStateChanged((user) => {
             if (user) {
-                this.setState({ user , waitWithRender: false});
+                this.setState({ waitWithRender: false});
+                this.props.storeUser({displayName: user.displayName!, uid: user.uid, photoURL: user.photoURL || undefined})
             }
             
         });
@@ -58,10 +62,10 @@ export class ProfileButton extends Component<any, ProfileButtonState> {
         return (
             !this.state.waitWithRender && <Fade in={true} timeout={1500}>
                 <div>
-                    {this.state.user ? 
-                        (<div className="profile-container">{this.state.user.photoURL ? 
-                            <Avatar className="avatar" alt={this.state.user.displayName!} src={this.state.user.photoURL!} onClick={this.openMenu.bind(this)}/> : 
-                            <Avatar className="avatar" alt={this.state.user.displayName!} onClick={this.openMenu.bind(this)}>{this.state.user.displayName!.substring(0,1)}</Avatar>
+                    {this.props.user ? 
+                        (<div className="profile-container">{this.props.user.photoURL ? 
+                            <Avatar className="avatar" alt={this.props.user.displayName} src={this.props.user.photoURL!} onClick={this.openMenu.bind(this)}/> : 
+                            <Avatar className="avatar" alt={this.props.user.displayName} onClick={this.openMenu.bind(this)}>{this.props.user.displayName.substring(0,1)}</Avatar>
                         }<IconButton onClick={this.openMenu.bind(this)}><ArrowDropDown className="dropdown-arrow" /></IconButton></div>) : 
                         (<Button variant="contained" color="secondary" onClick={this.login.bind(this)}>PŘIHLÁSIT</Button>)
                     }

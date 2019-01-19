@@ -4,6 +4,9 @@ import { ProfileButton } from "./ProfileButton";
 import { NavLink } from "react-router-dom";
 import { Routes, RoutesEnum } from "./";
 import './TopBar.css'
+import ProfileButtonContainer from "./ProfileButtonContainer";
+import { CurrentUser } from "../reducers";
+import { LoginAlert } from "./LoginAlert";
 
 const styles = {
     root: {
@@ -25,11 +28,28 @@ const styles = {
     }
   };
 
-class TopBar extends Component {
+interface TopBarState {
+    loginAlertOpen: boolean
+}
+
+interface TopBarProps {
+    currentUser?: CurrentUser
+}
+
+class TopBar extends Component<TopBarProps, TopBarState> {
     private classes: any
     constructor(props: any) {
         super(props)
         this.classes = props.classes;
+        this.state = { loginAlertOpen: false }
+    }
+
+    private showLoginAlert() {
+        this.setState({loginAlertOpen: true})
+    }
+
+    private hideLoginAlert() {
+        this.setState({loginAlertOpen: false})
     }
 
     public render(): ReactNode {
@@ -47,10 +67,11 @@ class TopBar extends Component {
                             <Typography variant="h6">Kocouři</Typography>
                         </NavLink>
                         <span className={this.classes.grow}>&nbsp;</span>
-                        <NavLink to={RoutesEnum.NEW_ARTICLE} style={{textDecoration: 'none'}} className="new-article-btn">
+                        {this.props.currentUser ? (<NavLink to={RoutesEnum.NEW_ARTICLE} style={{textDecoration: 'none'}} className="new-article-btn">
                             <Button variant="contained" color="secondary">NOVÝ INZERÁT</Button>
-                        </NavLink>
-                        <ProfileButton />
+                        </NavLink>) : (<Button variant="contained" style={{marginRight: '1.5em'}} color="secondary" onClick={this.showLoginAlert.bind(this)}>NOVÝ INZERÁT</Button>)}
+                        <ProfileButtonContainer />
+                        <LoginAlert open={this.state.loginAlertOpen} onClose={this.hideLoginAlert.bind(this)} />
                     </Toolbar>
                 </AppBar>
             </div>

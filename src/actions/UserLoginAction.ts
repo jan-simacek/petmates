@@ -1,8 +1,9 @@
 import { Action, CurrentUser } from "../reducers"
 import { ActionType } from './types'
 
-export class UserLoginAction implements Action<CurrentUser> {
-    public type = ActionType.USER_LOGIN
-    
-    constructor(public payload: CurrentUser) {}
+export default function userLoginAction(payload?: CurrentUser): Action<CurrentUser> {
+    return {
+        type: ActionType.USER_LOGIN,
+        payload: payload
+    }
 }
