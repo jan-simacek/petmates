@@ -23,6 +23,7 @@ interface ArticleListState {
 interface ArticleListRouteParams {
     sex?: string
     breedId?: string
+    regionId?: string
 }
 
 interface ArticleListProps {
@@ -46,7 +47,8 @@ export class ArticleList extends Component<ArticleListProps, ArticleListState> {
     private routeParamsToArticleFilter(routeParams: ArticleListRouteParams): ArticleListFilter {
         return {
             sex: routeParams.sex,
-            breedId: routeParams.breedId && +routeParams.breedId || undefined
+            breedId: routeParams.breedId && +routeParams.breedId || undefined,
+            regionId: routeParams.regionId && +routeParams.regionId || undefined
         }
     }
 
@@ -66,7 +68,10 @@ export class ArticleList extends Component<ArticleListProps, ArticleListState> {
                 hasMore={this.state.hasMore}
                 loader={<Loader key="loader" />}>
                 <div className="article-list">
-                    <Filter onChanged={(filterState) => this.navigateWithFilterState(filterState)} routeBreedId={this.state.filterState.breedId}/>
+                    <Filter onChanged={(filterState) => this.navigateWithFilterState(filterState)} 
+                        routeBreedId={this.state.filterState.breedId}
+                        routeRegionId={this.state.filterState.regionId}
+                    />
                     <Grid container spacing={24} justify="center">
                         {this.state.articles.map(art => {
                             return (
@@ -84,7 +89,7 @@ export class ArticleList extends Component<ArticleListProps, ArticleListState> {
     }
 
     private navigateWithFilterState(filterState: FilterState) {
-        this.props.history.push(Routes.getArticleListRoute(this.state.filterState.sex, filterState.breedId))
+        this.props.history.push(Routes.getArticleListRoute(this.state.filterState.sex, filterState.breedId, filterState.regionId))
     }
 
     private loadMore() {

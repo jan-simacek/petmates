@@ -5,6 +5,7 @@ export interface Article extends ArticleCommon {
     userId: string
     userName: string
     userPhotoUrl: string
+    regionName: string
 }
 
 export interface ArticleInput extends ArticleCommon{

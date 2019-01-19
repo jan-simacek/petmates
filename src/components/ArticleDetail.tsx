@@ -34,6 +34,7 @@ export class ArticleDetail extends Component<ArticleDetailProps, ArticleDetailSt
             imageId: "",
             isMale: true,
             regionId: 0,
+            regionName: "",
             petAge: 0,
             petName: "",
             userId: "",

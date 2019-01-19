@@ -37,12 +37,13 @@ export class ResolverService {
                     const lastDisplayedId = args.lastDisplayedId as string
                     const sex = args.sex as string
                     const breedId = args.breedId as number
-                    return that.articlesService.loadAllArticles(lastDisplayedId, {sex, breedId})
+                    const regionId = args.regionId as number
+                    return that.articlesService.loadAllArticles(lastDisplayedId, {sex, breedId, regionId})
                 },
                 async article(_rootValue, args): Promise<Article> {
                     return that.articlesService.loadArticleById(args.articleId)
                 },
-                async regions(_rootValue, args): Promise<Region[]> {
+                async regions(_rootValue): Promise<Region[]> {
                     return that.regionsService.loadAllRegions()
                 }
             },

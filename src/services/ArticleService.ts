@@ -30,11 +30,10 @@ const NEW_ARTICLE_MUTATION = gql`
 `
 
 const ARTICLES_QUERY = gql`
-    query Articles($lastDisplayedId: ID, $sex: String, $breedId: Int) {
-        articles(lastDisplayedId: $lastDisplayedId, sex: $sex, breedId: $breedId) {
+    query Articles($lastDisplayedId: ID, $sex: String, $breedId: Int, $regionId: Int) {
+        articles(lastDisplayedId: $lastDisplayedId, sex: $sex, breedId: $breedId, regionId: $regionId) {
             _id
             breedName
-            breedId
             petName
             petAge
             isMale
@@ -44,6 +43,7 @@ const ARTICLES_QUERY = gql`
             userId
             userName
             userPhotoUrl
+            regionName
         }
     }
 `
@@ -53,7 +53,6 @@ export const ARTICLE_QUERY = gql`
         article(articleId: $articleId) {
             _id
             breedName
-            breedId
             petName
             petAge
             isMale
@@ -63,6 +62,7 @@ export const ARTICLE_QUERY = gql`
             userId
             userName
             userPhotoUrl
+            regionName
         }
     }
 `
@@ -77,6 +77,7 @@ interface ArticleQueryResponse {
 export interface ArticleListFilter {
     sex?: string
     breedId?: number
+    regionId?: number
 }
 
 export class ArticleService {
