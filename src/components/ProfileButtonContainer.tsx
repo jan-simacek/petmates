@@ -1,13 +1,12 @@
 import {Dispatch} from "redux"
 import {connect} from "react-redux"
-import { CurrentUser, UserState, RootState, selectUserState, selectCurrentUser } from "../reducers";
+import { CurrentUser, RootState, selectUserState, selectCurrentUser, getCurrentUser } from "../reducers";
 import { ProfileButton } from "./ProfileButton";
 import userLoginAction from "../actions/UserLoginAction";
 
 const mapStateToProps = (state: RootState) => {
-    const userState = selectUserState(state)
     return {
-        user: selectCurrentUser(userState)
+        user: getCurrentUser(state)
     }
 }
 

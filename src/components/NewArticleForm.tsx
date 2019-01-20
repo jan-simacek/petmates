@@ -10,6 +10,7 @@ import {TextField as MTextField} from '@material-ui/core'
 import { auth } from '../index'
 import { Loader } from './Loader';
 import { BreedQuery, BREED_QUERY, RegionsQuery, REGIONS_QUERY } from './queries';
+import ImageUploadContainer from './ImageUploadContainer';
 
 interface NewArticleFormState {
     breedId: number
@@ -181,7 +182,7 @@ export class NewArticleForm extends Component<any, NewArticleFormState> {
                                     )}/>
                                 </Grid>
                                 <Grid item>
-                                    <Field name="fileUploaded" component={ImageUpload} />
+                                    <Field name="fileUploaded" component={ImageUploadContainer} />
                                     {errors.fileUploaded && touched.fileUploaded&& <Typography style={{fontSize: '0.75rem'}} color="error">{errors.fileUploaded}</Typography>}
                                 </Grid>
                                 <Button variant="contained" color="secondary" type="submit"

@@ -1,10 +1,13 @@
 service firebase.storage {
   match /b/{bucket}/o {
-    match /user-images/{imageId} {
-      allow write: if request.resource == null ||
-                            (request.resource.size < 5 * 1024 * 1024
-                         && request.resource.contentType.matches('image/.*'));
+    match /user-images/{allPaths=**} {
       allow read;
+    }
+
+    match /user-images/{userId}/{imageId} {
+      allow write: if request.auth.uid == userId && (request.resource == null 
+                          || (request.resource.size < 3 * 1024 * 1024 && request.resource.contentType.matches('image/.*'))
+                         );
     }
   }
 }

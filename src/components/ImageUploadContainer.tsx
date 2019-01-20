@@ -1,11 +1,12 @@
 import { RootState, getCurrentUser } from "../reducers";
+import { Dispatch } from "react";
 import { connect } from "react-redux";
-import TopBar from "./TopBar";
+import { ImageUpload } from "./ImageUpload";
 
 const mapStateToProps = (state: RootState) => {
     return {
-        currentUser: getCurrentUser(state)
+        user: getCurrentUser(state)
     }
 }
 
-export default connect(mapStateToProps)(TopBar)
+export default connect(mapStateToProps)(ImageUpload)

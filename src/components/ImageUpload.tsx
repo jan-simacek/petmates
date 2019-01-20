@@ -3,6 +3,7 @@ import {Button, Grid, Typography, Icon, LinearProgress} from "@material-ui/core"
 import { Clear } from '@material-ui/icons'
 import React from "react";
 import firebase from "firebase"
+import { CurrentUser } from "../reducers";
 
 const FirebaseFileUploader = require('react-firebase-file-uploader').default
 
@@ -16,6 +17,7 @@ interface ImageUploadState {
 interface ImageUploadProps {
     field: any
     form: any
+    user: CurrentUser
 }
 
 export class ImageUpload extends Component<ImageUploadProps, ImageUploadState>{
@@ -38,7 +40,7 @@ export class ImageUpload extends Component<ImageUploadProps, ImageUploadState>{
     }
 
     private handleUploadSuccess(fileName: string) {
-        this.setState({uploadError: false, fileName: fileName})
+        this.setState({uploadError: false, fileName: `${this.props.user.uid}/${fileName}`})
         this.props.field.onChange({target: {value: this.state.fileName, name: this.props.field.name}})
     }
 
@@ -63,7 +65,7 @@ export class ImageUpload extends Component<ImageUploadProps, ImageUploadState>{
                             accept="image/*"
                             name="imageUpload"
                             randomizeFilename
-                            storageRef={firebase.storage().ref('user-images')}
+                            storageRef={firebase.storage().ref(`/user-images/${this.props.user.uid}`)}
                             onUploadError={this.handleUploadError.bind(this)}
                             onUploadSuccess={this.handleUploadSuccess.bind(this)}
                             onProgress={this.handleUploadProgress.bind(this)}
