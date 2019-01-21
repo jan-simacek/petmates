@@ -1,3 +1,9 @@
+.filter {
+    margin-left: 5%;
+    margin-right: 5%;
+    padding-top: 2em;
+}
+
 .filter-form-control { 
     width: 100%;
 }

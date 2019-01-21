@@ -81,8 +81,8 @@ export class NewArticleForm extends Component<any, NewArticleFormState> {
 
     render(): React.ReactNode {
         return (
-            <div className="new-article-background">
-                <div className="new-article-heading">
+            <div className="new-article-background content">
+                <div className="new-article-heading heading">
                     <Typography variant="h2">Nový inzerát</Typography>
                 </div>
                 <Formik

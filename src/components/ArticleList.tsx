@@ -62,29 +62,31 @@ export class ArticleList extends Component<ArticleListProps, ArticleListState> {
 
     public render(): ReactNode {
         return (
-            <InfiniteScroll
-                pageStart={0}
-                loadMore={this.loadMore.bind(this)}
-                hasMore={this.state.hasMore}
-                loader={<Loader key="loader" />}>
-                <div className="article-list">
-                    <Filter onChanged={(filterState) => this.navigateWithFilterState(filterState)} 
-                        routeBreedId={this.state.filterState.breedId}
-                        routeRegionId={this.state.filterState.regionId}
-                    />
-                    <Grid container spacing={24} justify="center">
-                        {this.state.articles.map(art => {
-                            return (
-                                <Grid key={art._id} item>
-                                    <Link to={`/article/${art._id}`} style={{ textDecoration: 'none' }}>
-                                        <ArticleCard article={art}/>
-                                    </Link>
-                                </Grid>
-                            )
-                        })}
-                    </Grid>
-                </div>
-            </InfiniteScroll>
+            <div className="content">
+                <Filter onChanged={(filterState) => this.navigateWithFilterState(filterState)} 
+                    routeBreedId={this.state.filterState.breedId}
+                    routeRegionId={this.state.filterState.regionId}
+                />
+                <InfiniteScroll
+                    pageStart={0}
+                    loadMore={this.loadMore.bind(this)}
+                    hasMore={this.state.hasMore}
+                    loader={<Loader key="loader" />}>
+                    <div className="article-list">
+                        <Grid container spacing={24} justify="center">
+                            {this.state.articles.map(art => {
+                                return (
+                                    <Grid key={art._id} item>
+                                        <Link to={`/article/${art._id}`} style={{ textDecoration: 'none' }}>
+                                            <ArticleCard article={art}/>
+                                        </Link>
+                                    </Grid>
+                                )
+                            })}
+                        </Grid>
+                    </div>
+                </InfiniteScroll>
+            </div>
         )
     }
 

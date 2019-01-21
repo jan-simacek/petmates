@@ -29,7 +29,7 @@ export class Filter extends React.Component<FilterProps, FilterComponentState> {
 
     public render(): ReactNode {
             return (
-                <div>
+                <div className="filter">
                     <div className="expand-filter-button">
                         <Button onClick={this.toggleExpnd.bind(this)} variant="contained" size="small">
                             {this.state.collapsed ? 

@@ -1,11 +1,11 @@
 import React, { Component, ReactNode } from "react";
 import { Button, Avatar, Menu, MenuItem, IconButton, Fade } from "@material-ui/core";
-import { User } from "firebase";
 import { auth, provider } from "../index";
 import { ArrowDropDown } from '@material-ui/icons'
 import './ProfileButton.css'
-import { Dispatch } from 'redux'
 import { CurrentUser } from "../reducers";
+import { NavLink } from "react-router-dom";
+import { RoutesEnum } from ".";
 
 interface ProfileButtonState {
     anchorEl: any
@@ -79,6 +79,7 @@ export class ProfileButton extends Component<ProfileButtonProps, ProfileButtonSt
                         onClose={this.closeMenu.bind(this)}
                     >
                         <MenuItem onClick={this.logoutClick.bind(this)}>ODHLÁSIT</MenuItem>
+                        <MenuItem onClick={this.closeMenu.bind(this)}><NavLink style={{textDecoration: 'none', color: 'rgba(0, 0, 0, 0.87)'}} to={RoutesEnum.MY_PROFILE}>MŮJ PROFIL</NavLink></MenuItem>
                     </Menu>
                 </div>
             </Fade>

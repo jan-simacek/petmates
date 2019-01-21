@@ -1,3 +1,5 @@
 - zmen private key a tak na firebase nez s tim pudes ven!
 - BARVA kocky!, popis, odmena a dalsi pripadny pole na new article form
 - napsat firestore indexy do json - ted sou naklikany v ui, ale to by sem to musel klikat znova pro hafbook
+- vyres to s tim jak to furt vopruzuje ze uid was not found kdyz reloadnes new-article
+- po pridani inzeratu ho pridat do ty query a presmerovat "nekam" 
