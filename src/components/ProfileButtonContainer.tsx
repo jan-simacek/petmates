@@ -3,7 +3,6 @@ import {connect} from "react-redux"
 import { CurrentUser, RootState, selectUserState, selectCurrentUser, getCurrentUser } from "../reducers";
 import { ProfileButton } from "./ProfileButton";
 import userLoginAction from "../actions/UserLoginAction";
-import { withRouter } from "react-router-dom";
 
 const mapStateToProps = (state: RootState) => {
     return {
@@ -19,6 +18,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
     }
 }
 
-const ProfileButtonContainer = connect(mapStateToProps, mapDispatchToProps)(ProfileButton)
-
-export default ProfileButtonContainer
+export const ProfileButtonContainer = connect(mapStateToProps, mapDispatchToProps)(ProfileButton)

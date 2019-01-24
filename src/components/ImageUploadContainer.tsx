@@ -1,5 +1,4 @@
 import { RootState, getCurrentUser } from "../reducers";
-import { Dispatch } from "react";
 import { connect } from "react-redux";
 import { ImageUpload } from "./ImageUpload";
 
@@ -9,4 +8,4 @@ const mapStateToProps = (state: RootState) => {
     }
 }
 
-export default connect(mapStateToProps)(ImageUpload)
+export const ImageUploadContainer = connect(mapStateToProps)(ImageUpload)

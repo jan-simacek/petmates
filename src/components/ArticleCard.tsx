@@ -1,13 +1,13 @@
-import { Theme, Typography, CardContent, Collapse, CardActions, IconButton, Card, CardHeader, Avatar, CardMedia } from "@material-ui/core";
+import { Theme, Typography, CardContent, CardActions, IconButton, Card, CardHeader, Avatar, CardMedia, Tooltip } from "@material-ui/core";
 import { withStyles } from '@material-ui/core/styles';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import classnames from 'classnames';
+import ChatIcon from '@material-ui/icons/Chat'
+import AutoRenewIcon from '@material-ui/icons/Cached'
 import React from "react";
 import { Article } from "../model";
 import { firestoreService } from '../services'
+import { CurrentUser } from "../reducers";
+import { DeleteArticleButton } from "./DeleteArticleButton";
 
 const styles = (theme: Theme) => (
     {
@@ -47,6 +47,7 @@ const styles = (theme: Theme) => (
 interface ArticleCardProps {
     classes: any
     article: Article
+    currentUser?: CurrentUser
 }
 
 interface ArticleCardState {
@@ -54,7 +55,7 @@ interface ArticleCardState {
     articleImgUrl?: string
 }
 
-export class ArticleCard extends React.Component<ArticleCardProps, ArticleCardState>{
+class ArticleCardClass extends React.Component<ArticleCardProps, ArticleCardState>{
     constructor(props: ArticleCardProps) {
         super(props)
         this.state = { expanded: false, articleImgUrl: undefined}
@@ -68,7 +69,7 @@ export class ArticleCard extends React.Component<ArticleCardProps, ArticleCardSt
 
     render() {
         const { classes } = this.props;
-
+        console.log(`petName: ${this.props.article.petName}, userId: ${this.props.article.userId}, currentUserId: ${this.props.currentUser && this.props.currentUser.uid}`)
         return (
             <Card className={classes.card}>
                 <CardHeader
@@ -82,11 +83,6 @@ export class ArticleCard extends React.Component<ArticleCardProps, ArticleCardSt
                             </Avatar>
                         )
                     }
-                    // action={
-                    //   <IconButton>
-                    //     <MoreVertIcon />
-                    //   </IconButton>
-                    // }
                     subheader={this.props.article.breedName}
                     title={this.props.article.petName}
                 />
@@ -101,26 +97,35 @@ export class ArticleCard extends React.Component<ArticleCardProps, ArticleCardSt
                     </Typography>
                 </CardContent>
                 <CardActions className="actions" disableActionSpacing>
-                    <IconButton aria-label="Add to favorites">
-                        <FavoriteIcon />
-                    </IconButton>
-                    <IconButton aria-label="Share">
-                        <ShareIcon />
-                    </IconButton>
-                    <IconButton
-                        className={classnames(classes.expand, {
-                            [classes.expandOpen]: this.state.expanded,
-                        })}
-                        onClick={this.handleExpandClick}
-                        aria-expanded={this.state.expanded}
-                        aria-label="Show more"
-                    >
-                        <ExpandMoreIcon />
-                    </IconButton>
+                    {(this.props.currentUser && (this.props.currentUser.uid == this.props.article.userId)) ?
+                        (
+                            <span>
+                                <DeleteArticleButton />
+                                <Tooltip title="Obnovit inzerát">
+                                    <IconButton aria-label="Obnovit inzerát">
+                                        <AutoRenewIcon />
+                                    </IconButton>
+                                </Tooltip>
+                            </span>
+                        ) : (
+                            <span>
+                                <Tooltip title="Přidat k oblíbeným">
+                                    <IconButton aria-label="Přidat k oblíbeným">
+                                        <FavoriteIcon />
+                                    </IconButton>
+                                </Tooltip>
+                                <Tooltip title="Poslat zprávu">
+                                    <IconButton aria-label="Poslat zprávu">
+                                        <ChatIcon />
+                                    </IconButton>
+                                </Tooltip>
+                            </span>
+                        )
+                    }
                 </CardActions>
             </Card>
         );
     }
 }
 
-export default withStyles(styles)(ArticleCard);
+export const ArticleCard = withStyles(styles)(ArticleCardClass)

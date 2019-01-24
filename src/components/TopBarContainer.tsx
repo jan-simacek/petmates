@@ -1,6 +1,6 @@
 import { RootState, getCurrentUser } from "../reducers";
 import { connect } from "react-redux";
-import TopBar from "./TopBar";
+import { TopBar } from ".";
 
 const mapStateToProps = (state: RootState) => {
     return {
@@ -8,4 +8,4 @@ const mapStateToProps = (state: RootState) => {
     }
 }
 
-export default connect(mapStateToProps)(TopBar)
+export const TopBarContainer = connect(mapStateToProps)(TopBar)

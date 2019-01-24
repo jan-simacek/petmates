@@ -1,13 +1,12 @@
 import React, { Component, ReactNode } from "react";
-import { withStyles, AppBar, Toolbar, IconButton, Typography, Button } from "@material-ui/core";
-import { ProfileButton } from "./ProfileButton";
+import { withStyles, AppBar, Toolbar, Typography } from "@material-ui/core";
 import { NavLink } from "react-router-dom";
-import { Routes, RoutesEnum } from "./";
+import { Routes } from "./";
 import './TopBar.css'
-import ProfileButtonContainer from "./ProfileButtonContainer";
+import  { ProfileButtonContainer } from ".";
 import { CurrentUser } from "../reducers";
-import { LoginAlert } from "./LoginAlert";
 import { NewArticleButton } from "./NewArticleButton";
+import { MbAlert } from "./MbAlert";
 
 const styles = {
     root: {
@@ -38,7 +37,7 @@ interface TopBarProps {
     currentUser?: CurrentUser
 }
 
-class TopBar extends Component<TopBarProps, TopBarState> {
+class TopBarClass extends Component<TopBarProps, TopBarState> {
     private classes: any
     constructor(props: any) {
         super(props)
@@ -71,7 +70,12 @@ class TopBar extends Component<TopBarProps, TopBarState> {
                         <span className={this.classes.grow}>&nbsp;</span>
                         <NewArticleButton currentUser={this.props.currentUser} showLoginAlert={this.showLoginAlert.bind(this)} />
                         <ProfileButtonContainer />
-                        <LoginAlert open={this.state.loginAlertOpen} onClose={this.hideLoginAlert.bind(this)} />
+                        <MbAlert 
+                            open={this.state.loginAlertOpen} 
+                            onClose={this.hideLoginAlert.bind(this)} 
+                            title="Přihlášení"
+                            text="Pro přidání inzerátu je potřeba se nejdřív přihlásit."
+                        />
                     </Toolbar>
                 </AppBar>
             </div>
@@ -79,4 +83,4 @@ class TopBar extends Component<TopBarProps, TopBarState> {
     }
 }
 
-export default withStyles(styles)(TopBar)
+export const TopBar =  withStyles(styles)(TopBarClass)

@@ -6,9 +6,15 @@ import { BreedsService } from './BreedsService';
 import { ArticlesService } from './ArticlesService';
 import { Region } from '../model/Region';
 import { RegionsService } from './RegionsService';
+import { StorageService } from './StorageService';
+import { UserService } from '.';
 
 export class ResolverService {
-    constructor(private breedService: BreedsService, private articlesService: ArticlesService, private regionsService: RegionsService) { }
+    constructor(private breedService: BreedsService, 
+        private articlesService: ArticlesService, 
+        private regionsService: RegionsService,
+        private storageService: StorageService,
+        private userService: UserService) { }
 
     public getResolvers(): any {
         const that = this
@@ -38,7 +44,8 @@ export class ResolverService {
                     const sex = args.sex as string
                     const breedId = args.breedId as number
                     const regionId = args.regionId as number
-                    return that.articlesService.loadAllArticles(lastDisplayedId, {sex, breedId, regionId})
+                    const userId = args.userId as string
+                    return that.articlesService.loadAllArticles(lastDisplayedId, {sex, breedId, regionId, userId})
                 },
                 async article(_rootValue, args): Promise<Article> {
                     return that.articlesService.loadArticleById(args.articleId)
@@ -51,6 +58,17 @@ export class ResolverService {
                 async createArticle(_rootValue, args): Promise<Article> {
                     const articleInput = args.articleInput as ArticleInput
                     return that.articlesService.createArticle(articleInput)
+                },
+                async deleteArticle(_rootValue, args): Promise<Article> {
+                    const articleId = args.articleId as string
+                    const userToken = args.userToken as string
+                    
+                    const result = await that.articlesService.deleteArticle(articleId, userToken)
+                    
+                    const userId = (await that.userService.resolveUser(userToken)).uid
+                    await that.storageService.deleteImage(result.imageId, userId)
+                    
+                    return result
                 }
             }
         }

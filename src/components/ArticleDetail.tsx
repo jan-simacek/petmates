@@ -1,11 +1,10 @@
 import './ArticleDetail.css'
 import React, { Component, ReactNode } from "react";
 import { match } from "react-router";
-import { Query } from 'react-apollo';
 import { Article } from '../model';
 import { articleService } from '../index'
 import { firestoreService } from '../services';
-import { Typography, Grid, CircularProgress } from '@material-ui/core';
+import { Typography, Grid } from '@material-ui/core';
 import { Loader } from './Loader';
 
 interface ArticleDetailsRouteParams {

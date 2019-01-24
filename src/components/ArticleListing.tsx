@@ -2,8 +2,7 @@ import React, { ReactNode } from "react";
 import InfiniteScroll from 'react-infinite-scroller'
 import { articleService } from "..";
 import { Article } from "../model";
-import { Loader } from ".";
-import ArticleCard from "./ArticleCard";
+import { Loader, ArticleCardContainer } from ".";
 import { Grid } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { ArticleListFilter } from "../services";
@@ -48,7 +47,7 @@ export class ArticleListing extends React.Component<ArticleListingProps, Article
                             return (
                                 <Grid key={art._id} item>
                                     <Link to={`/article/${art._id}`} style={{ textDecoration: 'none' }}>
-                                        <ArticleCard article={art}/>
+                                        <ArticleCardContainer article={art}/>
                                     </Link>
                                 </Grid>
                             )

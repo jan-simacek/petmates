@@ -4,13 +4,11 @@ import {articleService} from "../index";
 import {Select, TextField, RadioGroup} from "formik-material-ui";
 import {Grid, Typography, FormControl, InputLabel, FormControlLabel, Radio, MenuItem, Button} from '@material-ui/core';
 import './NewArticleForm.css'
-import {ImageUpload} from "./ImageUpload"
 import {fieldToTextField} from 'formik-material-ui'
 import {TextField as MTextField} from '@material-ui/core'
 import { auth } from '../index'
-import { Loader } from './Loader';
+import { Loader, ImageUploadContainer } from '.';
 import { BreedQuery, BREED_QUERY, RegionsQuery, REGIONS_QUERY } from './queries';
-import ImageUploadContainer from './ImageUploadContainer';
 
 interface NewArticleFormState {
     breedId: number

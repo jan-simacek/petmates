@@ -10,20 +10,27 @@ interface ArticleFilter {
     sex?: string
     breedId?: number
     regionId?: number
+    userId?: string
 }
 
 export class ArticlesService {
-    constructor(private breedsService: BreedsService, private userService: UserService, private regionsService: RegionsService){}
+    private readonly firestore = admin.firestore();
+    
+    constructor(private breedsService: BreedsService, 
+        private userService: UserService,
+        private regionsService: RegionsService){ }
 
     public async loadArticleById(articleId: string): Promise<Article> {
-        const article = await this.loadArticleDocById(articleId)
-        const result = (await this.addRegionNameToArticles([this.articleDataToArticle(article)]))[0]
-        return result
+        const articleDoc = await this.loadArticleDocById(articleId)
+        return await this.articleDocToArticle(articleDoc)
+    }
+
+    private async articleDocToArticle(articleDoc: any): Promise<Article> {
+        return (await this.addRegionNameToArticles([this.articleDataToArticle(articleDoc)]))[0]
     }
 
     private async loadArticleDocById(id: string): Promise<any> {
-        const articles = await admin
-            .firestore()
+        const articles = await this.firestore
             .collection('articles')
             .where(admin.firestore.FieldPath.documentId(), '==', id)
             .get()
@@ -34,8 +41,7 @@ export class ArticlesService {
     }
 
     public async loadAllArticles(lastDisplayedArticleId?: string, articleFilter?: ArticleFilter): Promise<Article[]> {
-        let query = admin
-            .firestore()
+        let query = this.firestore
             .collection('articles')
             .orderBy("createDate", 'desc')
         query = ArticlesService.addFilterToQuery(query, articleFilter)
@@ -66,6 +72,10 @@ export class ArticlesService {
         if(articleFilter.regionId && articleFilter.regionId > 0) {
             result = result.where('regionId', '==', articleFilter.regionId)
         }
+        if(articleFilter.userId) {
+            result = result.where('userId', '==', articleFilter.userId)
+        }
+        
         return result
     }
 
@@ -84,7 +94,6 @@ export class ArticlesService {
     }
 
     public async createArticle(articleInput: ArticleInput): Promise<Article> {
-        console.log(articleInput)
         const allBreeds = await this.breedsService.loadAllBreeds()
         const breed = allBreeds.find(breed => breed.breedId == (+articleInput.breedId))
         const user = await this.userService.resolveUser(articleInput.userToken)
@@ -105,8 +114,7 @@ export class ArticlesService {
             userPhotoUrl: user.photoURL
         }
         console.log(docData)
-        const docRef = await admin
-            .firestore()
+        const docRef = await this.firestore
             .collection('articles')
             .add(docData)
         return (await this.addRegionNameToArticles([{
@@ -115,5 +123,18 @@ export class ArticlesService {
             createDate: new Date(dateNow),
             regionName: "unknown"
         }]))[0]
+    }
+
+    public async deleteArticle(articleId: string, userToken: string): Promise<Article> {
+        const articleDoc = await this.loadArticleDocById(articleId)
+        const article = await this.articleDataToArticle(articleDoc)
+        const user = await this.userService.resolveUser(userToken)
+        if(article.userId != user.uid) {
+            throw new Error("Access denied - users can only delete articles they created")
+        }
+
+        await articleDoc.delete()
+
+        return article
     }
 }

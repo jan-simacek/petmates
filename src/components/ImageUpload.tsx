@@ -1,9 +1,10 @@
 import {Component, Fragment} from "react";
-import {Button, Grid, Typography, Icon, LinearProgress} from "@material-ui/core";
+import {Button, Typography, LinearProgress} from "@material-ui/core";
 import { Clear } from '@material-ui/icons'
 import React from "react";
 import firebase from "firebase"
 import { CurrentUser } from "../reducers";
+import { Loader } from ".";
 
 const FirebaseFileUploader = require('react-firebase-file-uploader').default
 
@@ -53,6 +54,10 @@ export class ImageUpload extends Component<ImageUploadProps, ImageUploadState>{
     }
 
     render(): React.ReactNode {
+        if(!this.props.user) {
+            return <Loader />
+        }
+
         if(!this.state.fileName) {
             return (
                 <Fragment>

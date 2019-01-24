@@ -10,12 +10,13 @@ export const typeDefs = gql`
     ${Region.regionTypeDef}
     type Query {
         breeds: [Breed]
-        articles(lastDisplayedId: ID, sex: String, breedId: Int, regionId: Int): [Article]
+        articles(lastDisplayedId: ID, sex: String, breedId: Int, regionId: Int, userId: ID): [Article]
         article(articleId: ID): Article
         regions: [Region]
     }
    
     type Mutation {
         createArticle(articleInput: ArticleInput): Article
+        deleteArticle(articleId: ID!, userToken: String!): Article
     }
 `

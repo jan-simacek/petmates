@@ -79,7 +79,7 @@ export class ProfileButton extends Component<ProfileButtonProps, ProfileButtonSt
                         onClose={this.closeMenu.bind(this)}
                     >
                         <MenuItem onClick={this.logoutClick.bind(this)}>ODHLÁSIT</MenuItem>
-                        <MenuItem onClick={this.closeMenu.bind(this)}><NavLink style={{textDecoration: 'none', color: 'rgba(0, 0, 0, 0.87)'}} to={RoutesEnum.MY_PROFILE}>MŮJ PROFIL</NavLink></MenuItem>
+                        <MenuItem onClick={this.closeMenu.bind(this)}><NavLink style={{textDecoration: 'none', color: 'rgba(0, 0, 0, 0.87)'}} to={RoutesEnum.MY_PROFILE}>MOJE INZERÁTY</NavLink></MenuItem>
                     </Menu>
                 </div>
             </Fade>

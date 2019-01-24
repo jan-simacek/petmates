@@ -30,8 +30,8 @@ const NEW_ARTICLE_MUTATION = gql`
 `
 
 const ARTICLES_QUERY = gql`
-    query Articles($lastDisplayedId: ID, $sex: String, $breedId: Int, $regionId: Int) {
-        articles(lastDisplayedId: $lastDisplayedId, sex: $sex, breedId: $breedId, regionId: $regionId) {
+    query Articles($lastDisplayedId: ID, $sex: String, $breedId: Int, $regionId: Int, $userId: ID) {
+        articles(lastDisplayedId: $lastDisplayedId, sex: $sex, breedId: $breedId, regionId: $regionId, userId: $userId) {
             _id
             breedName
             petName
@@ -67,6 +67,17 @@ export const ARTICLE_QUERY = gql`
     }
 `
 
+const DELETE_ARTICLE_MUTATION = gql`
+    mutation DeleteArticleMutation(
+        $articleId: ID!,
+        $userToken: String!
+    ) {
+        deleteArticle(articleId: $articleId,userToken: $userToken) {
+            articleId
+        }
+    }
+`
+
 interface ArticleListQueryResponse {
     articles: Article[]
 }
@@ -78,6 +89,7 @@ export interface ArticleListFilter {
     sex?: string
     breedId?: number
     regionId?: number
+    userId?: string
 }
 
 export class ArticleService {
@@ -114,9 +126,15 @@ export class ArticleService {
     public async loadArticleById(articleId: string): Promise<Article> {
         const response = await this.apolloClient
             .query<ArticleQueryResponse>({query: ARTICLE_QUERY, variables: {'articleId': articleId}})
-            if(response.errors) {
-                throw new Error("Problem when loading articles: " + response.errors)
-            }
-            return response.data.article as Article
+        if(response.errors) {
+            throw new Error("Problem when loading articles: " + response.errors)
+        }
+        return response.data.article as Article
+    }
+
+    public async deleteArticle(articleId: string, userToken: string): Promise<void> {
+        this.apolloClient.mutate({mutation: DELETE_ARTICLE_MUTATION, variables: {
+            articleId, userToken
+        }})
     }
 }
