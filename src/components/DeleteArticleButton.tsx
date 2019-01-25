@@ -10,6 +10,7 @@ interface DeleteArticleButtonState {
 
 interface DeleteArticleButtonProps {
     articleId: string
+    onDelete?: () => void
 }
 
 export class DeleteArticleButton extends React.Component<DeleteArticleButtonProps, DeleteArticleButtonState> {
@@ -35,6 +36,7 @@ export class DeleteArticleButton extends React.Component<DeleteArticleButtonProp
         userService.getCurrentUserToken()
             .then(token => articleService.deleteArticle(this.props.articleId, token))
             .then(() => this.hideDialog())
+            .then(() => this.props.onDelete && this.props.onDelete())
     }
 
     public render(): ReactNode {

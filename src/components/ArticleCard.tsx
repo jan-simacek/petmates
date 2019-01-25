@@ -48,6 +48,7 @@ interface ArticleCardProps {
     classes: any
     article: Article
     currentUser?: CurrentUser
+    onDelete?: (article: Article) => void
 }
 
 interface ArticleCardState {
@@ -63,9 +64,9 @@ class ArticleCardClass extends React.Component<ArticleCardProps, ArticleCardStat
             .then(url => this.setState({articleImgUrl: url}))
     }
 
-    handleExpandClick = () => {
-        this.setState(state => ({ expanded: !state.expanded }));
-    };
+    private onDelete() {
+        this.props.onDelete && this.props.onDelete(this.props.article)
+    }
 
     render() {
         const { classes } = this.props;
@@ -100,7 +101,7 @@ class ArticleCardClass extends React.Component<ArticleCardProps, ArticleCardStat
                     {(this.props.currentUser && (this.props.currentUser.uid == this.props.article.userId)) ?
                         (
                             <span>
-                                <DeleteArticleButton articleId={this.props.article._id}/>
+                                <DeleteArticleButton articleId={this.props.article._id} onDelete={this.onDelete.bind(this)}/>
                                 <Tooltip title="Obnovit inzerát">
                                     <IconButton aria-label="Obnovit inzerát">
                                         <AutoRenewIcon />

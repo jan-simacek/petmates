@@ -34,6 +34,13 @@ export class ArticleListing extends React.Component<ArticleListingProps, Article
         })
     }
 
+    private onArticleDelete(article: Article) {
+        const index = this.state.articles.indexOf(article)
+        const newItems = this.state.articles.slice(0)
+        newItems.splice(index, 1)
+        this.setState({articles: newItems})
+    }
+
     public render(): ReactNode {
         return (
             <InfiniteScroll
@@ -47,7 +54,7 @@ export class ArticleListing extends React.Component<ArticleListingProps, Article
                             return (
                                 <Grid key={art._id} item>
                                     <Link to={`/article/${art._id}`} style={{ textDecoration: 'none' }}>
-                                        <ArticleCardContainer article={art}/>
+                                        <ArticleCardContainer article={art} onDelete={this.onArticleDelete.bind(this)} />
                                     </Link>
                                 </Grid>
                             )

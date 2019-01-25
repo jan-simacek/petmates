@@ -27,8 +27,9 @@ var config = {
 firebase.initializeApp(config);
 
 const httpLink = createHttpLink({uri: "http://localhost:5001/petmates-2b6fe/us-central1/api/graphql"})
-export const client = new ApolloClient({link: httpLink, cache: new InMemoryCache()})
-export const articleService = new ArticleService(client)
+export const cache = new InMemoryCache()
+export const client = new ApolloClient({link: httpLink, cache: cache})
+export const articleService = new ArticleService(client, cache)
 export const provider = new firebase.auth.GoogleAuthProvider()
 export const auth = firebase.auth()
 export const userService = new UserService(auth)

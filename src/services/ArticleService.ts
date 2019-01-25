@@ -1,8 +1,7 @@
 import { ApolloClient } from 'apollo-client'
 import {Article, ArticleInput} from "../model";
 import gql from "graphql-tag";
-import {NormalizedCacheObject} from 'apollo-cache-inmemory';
-import { Query, QueryProps } from 'react-apollo';
+import {NormalizedCacheObject, InMemoryCache} from 'apollo-cache-inmemory';
 
 const NEW_ARTICLE_MUTATION = gql`
   mutation NewArticleMutation(
@@ -104,7 +103,7 @@ export interface ArticleListFilter {
 }
 
 export class ArticleService {
-    constructor(private apolloClient: ApolloClient<NormalizedCacheObject>) {}
+    constructor(private apolloClient: ApolloClient<NormalizedCacheObject>, private cache: InMemoryCache) {}
 
     public addArticle(article: ArticleInput ): Promise<Article> {
         return this.apolloClient.mutate({mutation: NEW_ARTICLE_MUTATION, variables: {
@@ -149,8 +148,33 @@ export class ArticleService {
             variables: {
                 articleId, userToken
             }
-        }).then(fetchResult => {
-            this.apolloClient.reFetchObservableQueries()
+        }).then(_ => {
+            this.removeArticleFromCache(articleId)
+        })
+    }
+
+    /**
+     * hack to remove the article from all queries
+     * @param articleId 
+     */
+    private removeArticleFromCache(articleId: string) {
+        const cache = this.cache as any
+        const cacheObjectId = `Article:${articleId}`
+
+        // delete the Article object
+        Object.keys(cache.data.data).forEach(key => {
+            if(key === cacheObjectId) {
+                cache.data.delete(key)
+            }
+        })
+
+        // delete the object from queries
+        Object.keys(cache.data.data.ROOT_QUERY).forEach(key => {
+            cache.data.data.ROOT_QUERY[key].forEach((queryObject: any, index: number, array: Array<any>) => {
+                if(queryObject.id === cacheObjectId) {
+                    array.splice(index, 1)
+                }
+            })
         })
     }
 }
