@@ -14,6 +14,7 @@ import firebase from 'firebase';
 import { BrowserRouter } from 'react-router-dom'
 import { Provider } from 'react-redux';
 import store from './store';
+import { UserService } from './services';
 
 var config = {
     apiKey: "AIzaSyCDSVW5vzFgauiBIhGQFdP0CC6Oy1AWeVQ",
@@ -30,6 +31,7 @@ export const client = new ApolloClient({link: httpLink, cache: new InMemoryCache
 export const articleService = new ArticleService(client)
 export const provider = new firebase.auth.GoogleAuthProvider()
 export const auth = firebase.auth()
+export const userService = new UserService(auth)
 
 ReactDOM.render(
     <BrowserRouter>

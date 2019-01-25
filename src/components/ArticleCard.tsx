@@ -100,7 +100,7 @@ class ArticleCardClass extends React.Component<ArticleCardProps, ArticleCardStat
                     {(this.props.currentUser && (this.props.currentUser.uid == this.props.article.userId)) ?
                         (
                             <span>
-                                <DeleteArticleButton />
+                                <DeleteArticleButton articleId={this.props.article._id}/>
                                 <Tooltip title="Obnovit inzerát">
                                     <IconButton aria-label="Obnovit inzerát">
                                         <AutoRenewIcon />

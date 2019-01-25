@@ -3,6 +3,7 @@ import { Article, ArticleInput, Region } from '../model';
 import { BreedsService } from './BreedsService';
 import { UserService } from './UserService';
 import { RegionsService } from './RegionsService';
+import { FieldValue } from '@google-cloud/firestore';
 
 const PAGE_SIZE = 3
 
@@ -126,15 +127,14 @@ export class ArticlesService {
     }
 
     public async deleteArticle(articleId: string, userToken: string): Promise<Article> {
-        const articleDoc = await this.loadArticleDocById(articleId)
-        const article = await this.articleDataToArticle(articleDoc)
+        const article = await this.loadArticleById(articleId)
         const user = await this.userService.resolveUser(userToken)
         if(article.userId != user.uid) {
+            console.log("access denied")
             throw new Error("Access denied - users can only delete articles they created")
         }
 
-        await articleDoc.delete()
-
+        const result: FieldValue = await this.firestore.collection('articles').doc(articleId).delete()
         return article
     }
 }

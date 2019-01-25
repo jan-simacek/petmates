@@ -73,7 +73,18 @@ const DELETE_ARTICLE_MUTATION = gql`
         $userToken: String!
     ) {
         deleteArticle(articleId: $articleId,userToken: $userToken) {
-            articleId
+            _id
+            breedName
+            petName
+            petAge
+            isMale
+            createDate
+            imageId
+            articleText
+            userId
+            userName
+            userPhotoUrl
+            regionName
         }
     }
 `
@@ -133,8 +144,13 @@ export class ArticleService {
     }
 
     public async deleteArticle(articleId: string, userToken: string): Promise<void> {
-        this.apolloClient.mutate({mutation: DELETE_ARTICLE_MUTATION, variables: {
-            articleId, userToken
-        }})
+        return this.apolloClient.mutate({
+            mutation: DELETE_ARTICLE_MUTATION, 
+            variables: {
+                articleId, userToken
+            }
+        }).then(fetchResult => {
+            this.apolloClient.reFetchObservableQueries()
+        })
     }
 }

@@ -6,7 +6,7 @@ import {Grid, Typography, FormControl, InputLabel, FormControlLabel, Radio, Menu
 import './NewArticleForm.css'
 import {fieldToTextField} from 'formik-material-ui'
 import {TextField as MTextField} from '@material-ui/core'
-import { auth } from '../index'
+import { userService } from '../index'
 import { Loader, ImageUploadContainer } from '.';
 import { BreedQuery, BREED_QUERY, RegionsQuery, REGIONS_QUERY } from './queries';
 
@@ -88,7 +88,7 @@ export class NewArticleForm extends Component<any, NewArticleFormState> {
                     validate={this.validate}
                     onSubmit={(values: NewArticleFormState, {setSubmitting}) => {
                         setSubmitting(true)
-                        auth.currentUser!.getIdToken(true).then(token => {
+                        userService.getCurrentUserToken().then(token => {
                             this.articleService.addArticle({
                                 breedId: values.breedId,
                                 isMale: JSON.parse("" + values.isMale),

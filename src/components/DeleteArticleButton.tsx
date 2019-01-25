@@ -2,13 +2,18 @@ import React, { ReactNode } from "react";
 import { Tooltip, IconButton } from "@material-ui/core";
 import DeleteIcon from '@material-ui/icons/Delete'
 import { MbDialog } from "./MbDialog";
+import { articleService, userService } from '../index'
 
 interface DeleteArticleButtonState {
     dialogOpen: boolean
 }
 
-export class DeleteArticleButton extends React.Component<any, DeleteArticleButtonState> {
-    constructor(props: any) {
+interface DeleteArticleButtonProps {
+    articleId: string
+}
+
+export class DeleteArticleButton extends React.Component<DeleteArticleButtonProps, DeleteArticleButtonState> {
+    constructor(props: DeleteArticleButtonProps) {
         super(props)
         this.state = {dialogOpen: false}
     }
@@ -26,6 +31,12 @@ export class DeleteArticleButton extends React.Component<any, DeleteArticleButto
         this.showDialog()
     }
 
+    private onOkClick() {
+        userService.getCurrentUserToken()
+            .then(token => articleService.deleteArticle(this.props.articleId, token))
+            .then(() => this.hideDialog())
+    }
+
     public render(): ReactNode {
         return (
             <span>
@@ -35,7 +46,7 @@ export class DeleteArticleButton extends React.Component<any, DeleteArticleButto
                     </IconButton>
                 </Tooltip>
                 <MbDialog 
-                    onOk={() => alert('ok clicked')}
+                    onOk={this.onOkClick.bind(this)}
                     onCancel={this.hideDialog.bind(this)}
                     open={this.state.dialogOpen}
                     title="Smazat inzerát"

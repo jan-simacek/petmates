@@ -4,3 +4,4 @@
 - po pridani inzeratu ho pridat do ty query a presmerovat "nekam"
 - az budes delat favorities tak nezapomen pridat vymazani ty subkolekce do deleteArticle - firestore pri delete NEMAZE subkolekce
 - chces nak propojit a votestovat to mazani articlu
+- kdyz nahrajes obrazek a je vetsi nez 3MB tak ti to nedovoli nahrat novej

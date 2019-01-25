@@ -14,7 +14,7 @@ export class StorageService {
             throw new Error(`Access denied`)
         }
 
-        return this.storage.file(imageUrl).delete()
+        return this.storage.file(`user-images/${imageUrl}`).delete()
     }
 
 }

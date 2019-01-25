@@ -66,7 +66,11 @@ export class ResolverService {
                     const result = await that.articlesService.deleteArticle(articleId, userToken)
                     
                     const userId = (await that.userService.resolveUser(userToken)).uid
-                    await that.storageService.deleteImage(result.imageId, userId)
+                    try {
+                        await that.storageService.deleteImage(result.imageId, userId)
+                    } catch(err) {
+                        console.log(`error deleting image: ${err}`)
+                    }
                     
                     return result
                 }
