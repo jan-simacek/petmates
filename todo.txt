@@ -1,7 +1,6 @@
 - zmen private key a tak na firebase nez s tim pudes ven!
+- vyhod ten enhancer nez s tim pudes ven - nak to s nim nefunguje v anonymnim rezim (tj asi bez toho redux pluginu)
 - BARVA kocky!, popis, odmena a dalsi pripadny pole na new article form
 - napsat firestore indexy do json - ted sou naklikany v ui, ale to by sem to musel klikat znova pro hafbook
-- po pridani inzeratu ho pridat do ty query a presmerovat "nekam"
 - az budes delat favorities tak nezapomen pridat vymazani ty subkolekce do deleteArticle - firestore pri delete NEMAZE subkolekce
-- kdyz nahrajes obrazek a je vetsi nez 3MB tak ti to nedovoli nahrat novej
-- disable na ty ImageUpload komponente kdyz je field.disabled (coz je pri submitu) - nak to zasedit a neprijimat clicky a tak
+- nakej automatickej resize na obrazky vetsi nez 3MB

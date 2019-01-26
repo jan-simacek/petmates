@@ -8,7 +8,6 @@ import { Loader } from ".";
 
 const FirebaseFileUploader = require('react-firebase-file-uploader').default
 
-
 interface ImageUploadState {
     uploadError: boolean
     fileName?: string
@@ -28,6 +27,10 @@ export class ImageUpload extends Component<ImageUploadProps, ImageUploadState>{
     }
 
     private handleClear = (event: any) => {
+        if(this.props.form.isSubmitting) {
+            return
+        }
+
         event.preventDefault()
         firebase.storage().ref('user-images')
             .child(this.state.fileName!)
@@ -46,7 +49,7 @@ export class ImageUpload extends Component<ImageUploadProps, ImageUploadState>{
     }
 
     private handleUploadError(error: any) {
-        this.setState({uploadError: true})
+        this.setState({uploadError: true, uploadProgress: undefined})
     }
 
     private handleUploadProgress(progress: number) {
@@ -60,11 +63,13 @@ export class ImageUpload extends Component<ImageUploadProps, ImageUploadState>{
 
         if(!this.state.fileName) {
             return (
-                <Fragment>
+                <div>
                     <label>
-                        {!this.state.uploadProgress && <Button variant="contained" component="span" disabled={this.state.uploadProgress != undefined}>
-                            NAHRÁT OBRÁZEK
-                        </Button> }
+                        {!this.state.uploadProgress && (
+                            <Button variant="contained" component="span" disabled={this.state.uploadProgress != undefined}>
+                                NAHRÁT OBRÁZEK
+                            </Button>
+                        )}
                         <FirebaseFileUploader
                             hidden
                             accept="image/*"
@@ -77,16 +82,16 @@ export class ImageUpload extends Component<ImageUploadProps, ImageUploadState>{
                         />
                     </label>
                     {this.state.uploadError &&
-                    <Typography color="error">
-                        Obrázek musí být menší než 3MB.
-                    </Typography>
+                        <Typography color="error">
+                            Obrázek musí být menší než 3MB.
+                        </Typography>
                     }
                     {!!this.state.uploadProgress && <LinearProgress variant="determinate" value={this.state.uploadProgress} />}
-                </Fragment>
+                </div>
             )
         } else {
             return (
-                <div>
+                <div style={{opacity: this.props.form.isSubmitting ? 0.5 : 1}}>
                     <p style={{position: 'relative'}}>{"Obrázek nahrán"}
                         <a href='#' onClick={this.handleClear.bind(this)}><Clear style={{position: 'absolute', bottom: 0}}>Clear</Clear></a></p>
                 </div>

@@ -1,7 +1,3 @@
 .new-article-btn {
     margin-right: 2em
 }
-
-.new-article-btn.active {
-    visibility: hidden
-}

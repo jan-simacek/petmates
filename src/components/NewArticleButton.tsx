@@ -18,10 +18,9 @@ export class NewArticleButton extends React.Component<NewArticleButtonProps, New
     constructor(props: NewArticleButtonProps) {
         super(props)
         this.state = {startRender: false}
-    }
-
-    componentDidMount() {
-        setTimeout(() => {this.setState({startRender: true})}, RENDER_TIMEOUT)
+        setTimeout(() => {
+            this.setState({startRender: true})
+        }, RENDER_TIMEOUT)
     }
 
     public render(): ReactNode {

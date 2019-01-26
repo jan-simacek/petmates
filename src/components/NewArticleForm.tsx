@@ -203,7 +203,7 @@ export class NewArticleForm extends Component<NewArticleFormProps, NewArticleFor
                                     </FormControl>
                                 </Grid>
                                 <Grid item>
-                                    <FormControl disabled={isSubmitting}>
+                                    <FormControl disabled={isSubmitting} style={{width: '100%'}}>
                                         <Field name="fileUploaded" component={ImageUploadContainer} />
                                         {errors.fileUploaded && touched.fileUploaded&& <Typography style={{fontSize: '0.75rem'}} color="error">{errors.fileUploaded}</Typography>}
                                     </FormControl>
