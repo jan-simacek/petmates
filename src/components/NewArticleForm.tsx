@@ -9,6 +9,9 @@ import {TextField as MTextField} from '@material-ui/core'
 import { userService } from '../index'
 import { Loader, ImageUploadContainer } from '.';
 import { BreedQuery, BREED_QUERY, RegionsQuery, REGIONS_QUERY } from './queries';
+import { match } from 'react-router-dom';
+import { History } from 'history'
+import { RoutesEnum } from './Routes';
 
 interface NewArticleFormState {
     breedId: number
@@ -40,7 +43,13 @@ const MyField = (props: MyFieldProps) => {
     />
 }
 
-export class NewArticleForm extends Component<any, NewArticleFormState> {
+interface NewArticleFormProps {
+    match: match<any>
+    history: History
+    location: any
+}
+
+export class NewArticleForm extends Component<NewArticleFormProps, NewArticleFormState> {
     private articleService = articleService
 
     constructor(props: any) {
@@ -89,7 +98,7 @@ export class NewArticleForm extends Component<any, NewArticleFormState> {
                     onSubmit={(values: NewArticleFormState, {setSubmitting}) => {
                         setSubmitting(true)
                         userService.getCurrentUserToken().then(token => {
-                            this.articleService.addArticle({
+                            return this.articleService.addArticle({
                                 breedId: values.breedId,
                                 isMale: JSON.parse("" + values.isMale),
                                 petAge: values.petAge,
@@ -99,15 +108,19 @@ export class NewArticleForm extends Component<any, NewArticleFormState> {
                                 articleText: values.articleText,
                                 userToken: token
                             })
+                        }).then(_ => {
+                            setSubmitting(false)
+                            this.props.history.push(RoutesEnum.MY_PROFILE)
                         })
-                        setSubmitting(false)
                     }}>
                     {({errors, touched, isSubmitting}) => {
                         return (
                         <Form className="new-article-form">
                             <Grid container spacing={24} style={{padding: 24}} direction="column">
                                 <Grid item lg>
-                                    <MyField name="petName" component={TextField} label="Jméno mazlíčka" />
+                                    <FormControl disabled={isSubmitting} style={{width: '100%'}}>
+                                        <MyField name="petName" component={TextField} label="Jméno mazlíčka" />
+                                    </FormControl>
                                 </Grid>
                                 <Grid item lg>
                                     <BreedQuery query={BREED_QUERY}>
@@ -115,7 +128,11 @@ export class NewArticleForm extends Component<any, NewArticleFormState> {
                                             if (loading) return <Loader />
                                             if (error) return <div>Error</div>
                                             return (
-                                            <FormControl style={{width: '100%'}} error={!!errors.breedId && !!touched.breedId}>
+                                            <FormControl 
+                                                style={{width: '100%'}} 
+                                                error={!!errors.breedId && !!touched.breedId}
+                                                disabled={isSubmitting}
+                                            >
                                                 <InputLabel htmlFor="breedId">Plemeno</InputLabel>
                                                 <Field component={Select} name="breedId" label="Plemeno">
                                                     {data!.breeds.sort((a,b) => a.breedName.localeCompare(b.breedName))
@@ -138,7 +155,11 @@ export class NewArticleForm extends Component<any, NewArticleFormState> {
                                             if (loading) return <Loader />
                                             if (error) return <div>Error</div>
                                             return (
-                                            <FormControl style={{width: '100%'}} error={!!errors.regionId && !!touched.regionId}>
+                                            <FormControl 
+                                                style={{width: '100%'}} 
+                                                error={!!errors.regionId && !!touched.regionId}
+                                                disabled={isSubmitting}
+                                            >
                                                 <InputLabel htmlFor="regionId">Kraj</InputLabel>
                                                 <Field component={Select} name="regionId" label="Kraj">
                                                     {data!.regions.map(region => (
@@ -174,14 +195,18 @@ export class NewArticleForm extends Component<any, NewArticleFormState> {
                                     </Field>
                                 </Grid>
                                 <Grid item>
-                                    <Field name="articleText" render={(props: any) => (
-                                        <MTextField {...fieldToTextField(props)} multiline={true} rows={4}
-                                            label="Text inzerátu" style={{width: '100%'}}  />
-                                    )}/>
+                                    <FormControl disabled={isSubmitting} style={{width: '100%'}}>
+                                        <Field name="articleText" render={(props: any) => (
+                                            <MTextField {...fieldToTextField(props)} multiline={true} rows={4}
+                                                label="Text inzerátu" style={{width: '100%'}}  />
+                                        )}/>
+                                    </FormControl>
                                 </Grid>
                                 <Grid item>
-                                    <Field name="fileUploaded" component={ImageUploadContainer} />
-                                    {errors.fileUploaded && touched.fileUploaded&& <Typography style={{fontSize: '0.75rem'}} color="error">{errors.fileUploaded}</Typography>}
+                                    <FormControl disabled={isSubmitting}>
+                                        <Field name="fileUploaded" component={ImageUploadContainer} />
+                                        {errors.fileUploaded && touched.fileUploaded&& <Typography style={{fontSize: '0.75rem'}} color="error">{errors.fileUploaded}</Typography>}
+                                    </FormControl>
                                 </Grid>
                                 <Button variant="contained" color="secondary" type="submit"
                                         disabled={isSubmitting} style={{alignSelf: 'center'}}>Odeslat</Button>

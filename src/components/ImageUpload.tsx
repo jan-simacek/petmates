@@ -62,7 +62,7 @@ export class ImageUpload extends Component<ImageUploadProps, ImageUploadState>{
             return (
                 <Fragment>
                     <label>
-                        {!this.state.uploadProgress && <Button variant="contained" component="span">
+                        {!this.state.uploadProgress && <Button variant="contained" component="span" disabled={this.state.uploadProgress != undefined}>
                             NAHRÁT OBRÁZEK
                         </Button> }
                         <FirebaseFileUploader

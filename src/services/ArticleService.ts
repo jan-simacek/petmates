@@ -106,7 +106,7 @@ export class ArticleService {
     constructor(private apolloClient: ApolloClient<NormalizedCacheObject>, private cache: InMemoryCache) {}
 
     public addArticle(article: ArticleInput ): Promise<Article> {
-        return this.apolloClient.mutate({mutation: NEW_ARTICLE_MUTATION, variables: {
+        const result = this.apolloClient.mutate({mutation: NEW_ARTICLE_MUTATION, variables: {
                 breedId: article.breedId,
                 petName: article.petName,
                 petAge: article.petAge,
@@ -116,6 +116,9 @@ export class ArticleService {
                 articleText: article.articleText,
                 userToken: article.userToken
             }}) as Promise<Article>
+
+        this.apolloClient.resetStore()
+        return result
     }
 
     public async loadArticles(lastDisplayedId?: string, filter?: ArticleListFilter): Promise<Article[]> {

@@ -1,5 +1,6 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, Fragment } from "react";
 import { Dialog, DialogActions, Button, DialogContentText, DialogContent, DialogTitle } from "@material-ui/core";
+import { Loader } from "./Loader";
 
 interface MbDialogProps {
     onCancel?: () => void
@@ -9,9 +10,19 @@ interface MbDialogProps {
     text: string
 }
 
-export class MbDialog extends React.Component<MbDialogProps> {
+interface MbDialogState {
+    isSubmitting: boolean
+}
+
+export class MbDialog extends React.Component<MbDialogProps, MbDialogState> {
+    constructor(props: MbDialogProps) {
+        super(props)
+        this.state = {isSubmitting: false}
+    }
+
     private handleOnOk(event: any) {
         event.preventDefault()
+        this.setState({isSubmitting: true})
         this.props.onOk()
     }
 
@@ -22,6 +33,12 @@ export class MbDialog extends React.Component<MbDialogProps> {
         }
     }
     
+    // public componentWillReceiveProps(nextProps: MbDialogProps) {
+    //     if(!nextProps.open) {
+    //         this.setState({isSubmitting: false})
+    //     }
+    // }
+
     public render(): ReactNode {
         return (
             <Dialog
@@ -35,12 +52,20 @@ export class MbDialog extends React.Component<MbDialogProps> {
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={this.handleOnOk.bind(this)} color="secondary">
-                        Ok
-                    </Button>
-                    <Button onClick={this.handleOnCancel.bind(this)} color="secondary">
-                        Zrušit
-                    </Button>
+                    {this.state.isSubmitting ? (
+                            <span style={{marginRight: '1em'}}>
+                                <Loader />
+                            </span>
+                        ) : (
+                        <Fragment>
+                            <Button onClick={this.handleOnOk.bind(this)} color="secondary" disabled={this.state.isSubmitting}>
+                                Ok
+                            </Button>
+                            <Button onClick={this.handleOnCancel.bind(this)} color="secondary" disabled={this.state.isSubmitting}>
+                                Zrušit
+                            </Button>
+                        </Fragment>
+                    )}
                 </DialogActions>
             </Dialog>
         )

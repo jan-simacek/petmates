@@ -6,6 +6,7 @@ import { articleService, userService } from '../index'
 
 interface DeleteArticleButtonState {
     dialogOpen: boolean
+    isSubmitting: boolean
 }
 
 interface DeleteArticleButtonProps {
@@ -16,7 +17,7 @@ interface DeleteArticleButtonProps {
 export class DeleteArticleButton extends React.Component<DeleteArticleButtonProps, DeleteArticleButtonState> {
     constructor(props: DeleteArticleButtonProps) {
         super(props)
-        this.state = {dialogOpen: false}
+        this.state = {dialogOpen: false, isSubmitting: false}
     }
 
     private showDialog() {
@@ -33,6 +34,7 @@ export class DeleteArticleButton extends React.Component<DeleteArticleButtonProp
     }
 
     private onOkClick() {
+        this.setState({isSubmitting: true})
         userService.getCurrentUserToken()
             .then(token => articleService.deleteArticle(this.props.articleId, token))
             .then(() => this.hideDialog())

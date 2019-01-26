@@ -4,4 +4,4 @@
 - po pridani inzeratu ho pridat do ty query a presmerovat "nekam"
 - az budes delat favorities tak nezapomen pridat vymazani ty subkolekce do deleteArticle - firestore pri delete NEMAZE subkolekce
 - kdyz nahrajes obrazek a je vetsi nez 3MB tak ti to nedovoli nahrat novej
-- kdyz pridas inzerat tak je ho potreba vlozit do cache na MyProfile pokud uz nejaka je
+- disable na ty ImageUpload komponente kdyz je field.disabled (coz je pri submitu) - nak to zasedit a neprijimat clicky a tak
