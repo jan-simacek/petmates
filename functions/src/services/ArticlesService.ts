@@ -146,7 +146,7 @@ export class ArticlesService {
         }
 
         const dateNow = Date.now()
-        await articleDoc.ref.update({createDate: new Date(dateNow)})
+        await articleDoc.ref.update({createDate: dateNow})
         const article = await this.articleDocToArticle(articleDoc)
         article.createDate = new Date(dateNow)
         return article
