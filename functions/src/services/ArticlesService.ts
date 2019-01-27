@@ -137,4 +137,18 @@ export class ArticlesService {
         const result: FieldValue = await this.firestore.collection('articles').doc(articleId).delete()
         return article
     }
+
+    public async renewArticle(articleId: string, userToken: string): Promise<Article> {
+        const articleDoc = await this.loadArticleDocById(articleId)
+        const user = await this.userService.resolveUser(userToken)
+        if(articleDoc.data().userId != user.uid) {
+            throw new Error(`Access denied - only author can renew article`)
+        }
+
+        const dateNow = Date.now()
+        await articleDoc.ref.update({createDate: new Date(dateNow)})
+        const article = await this.articleDocToArticle(articleDoc)
+        article.createDate = new Date(dateNow)
+        return article
+    }
 }

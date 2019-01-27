@@ -1,13 +1,15 @@
 import { Theme, Typography, CardContent, CardActions, IconButton, Card, CardHeader, Avatar, CardMedia, Tooltip } from "@material-ui/core";
 import { withStyles } from '@material-ui/core/styles';
 import FavoriteIcon from '@material-ui/icons/Favorite';
+import DeleteIcon from '@material-ui/icons/Delete'
 import ChatIcon from '@material-ui/icons/Chat'
 import AutoRenewIcon from '@material-ui/icons/Cached'
 import React from "react";
 import { Article } from "../model";
 import { firestoreService } from '../services'
 import { CurrentUser } from "../reducers";
-import { DeleteArticleButton } from "./DeleteArticleButton";
+import { ButtonWithConfirmation } from "./ButtonWithConfirmation";
+import { articleService, userService } from "..";
 
 const styles = (theme: Theme) => (
     {
@@ -48,7 +50,8 @@ interface ArticleCardProps {
     classes: any
     article: Article
     currentUser?: CurrentUser
-    onDelete?: (article: Article) => void
+    onDelete: (article: Article) => void
+    onRenew: (article: Article) => void    
 }
 
 interface ArticleCardState {
@@ -64,13 +67,24 @@ class ArticleCardClass extends React.Component<ArticleCardProps, ArticleCardStat
             .then(url => this.setState({articleImgUrl: url}))
     }
 
-    private onDelete() {
-        this.props.onDelete && this.props.onDelete(this.props.article)
+    private onDeleteFinished() {
+        this.props.onDelete(this.props.article)
+    }
+
+    private deleteArticle(): Promise<void> {
+        return userService.getCurrentUserToken()
+            .then(userToken => articleService.deleteArticle(this.props.article._id, userToken))
+            .then(() => this.onDeleteFinished())
+    }
+
+    private renewArticle(): Promise<any> {
+        return userService.getCurrentUserToken()
+            .then(userToken => articleService.renewArticle(this.props.article._id, userToken))
+            .then(newArticle => this.props.onRenew(newArticle))
     }
 
     render() {
-        const { classes } = this.props;
-        console.log(`petName: ${this.props.article.petName}, userId: ${this.props.article.userId}, currentUserId: ${this.props.currentUser && this.props.currentUser.uid}`)
+        const { classes } = this.props
         return (
             <Card className={classes.card}>
                 <CardHeader
@@ -101,12 +115,20 @@ class ArticleCardClass extends React.Component<ArticleCardProps, ArticleCardStat
                     {(this.props.currentUser && (this.props.currentUser.uid == this.props.article.userId)) ?
                         (
                             <span>
-                                <DeleteArticleButton articleId={this.props.article._id} onDelete={this.onDelete.bind(this)}/>
-                                <Tooltip title="Obnovit inzerát">
-                                    <IconButton aria-label="Obnovit inzerát">
-                                        <AutoRenewIcon />
-                                    </IconButton>
-                                </Tooltip>
+                                <ButtonWithConfirmation
+                                    title="Smazat inzerát"
+                                    text="Opravdu mám tento inzerát smazat?"
+                                    onOk={this.deleteArticle.bind(this)}
+                                >
+                                    <DeleteIcon />
+                                </ButtonWithConfirmation>
+                                <ButtonWithConfirmation
+                                    title="Obnovit inzerát"
+                                    text="Inzerát bude znovu podán. Mám pokračovat?"
+                                    onOk={this.renewArticle.bind(this)}
+                                >
+                                    <AutoRenewIcon />
+                                </ButtonWithConfirmation>
                             </span>
                         ) : (
                             <span>

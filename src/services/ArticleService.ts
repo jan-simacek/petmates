@@ -2,6 +2,7 @@ import { ApolloClient } from 'apollo-client'
 import {Article, ArticleInput} from "../model";
 import gql from "graphql-tag";
 import {NormalizedCacheObject, InMemoryCache} from 'apollo-cache-inmemory';
+import { GraphQLCacheService } from './GraphQLCacheService';
 
 const NEW_ARTICLE_MUTATION = gql`
   mutation NewArticleMutation(
@@ -88,11 +89,36 @@ const DELETE_ARTICLE_MUTATION = gql`
     }
 `
 
+const RENEW_ARTICE_MUTATION = gql`
+    mutation RenewArticleMutation(
+        $articleId: ID!,
+        $userToken: String!
+    ) {
+        renewArticle(articleId: $articleId, userToken: $userToken) {
+            _id
+            breedName
+            petName
+            petAge
+            isMale
+            createDate
+            imageId
+            articleText
+            userId
+            userName
+            userPhotoUrl
+            regionName
+        }
+    }
+`
+
 interface ArticleListQueryResponse {
     articles: Article[]
 }
 interface ArticleQueryResponse {
     article: Article
+}
+interface RenewArticleMutationResponse {
+    renewArticle: Article
 }
 
 export interface ArticleListFilter {
@@ -103,7 +129,7 @@ export interface ArticleListFilter {
 }
 
 export class ArticleService {
-    constructor(private apolloClient: ApolloClient<NormalizedCacheObject>, private cache: InMemoryCache) {}
+    constructor(private apolloClient: ApolloClient<NormalizedCacheObject>, private cacheService: GraphQLCacheService) {}
 
     public addArticle(article: ArticleInput ): Promise<Article> {
         const result = this.apolloClient.mutate({mutation: NEW_ARTICLE_MUTATION, variables: {
@@ -152,32 +178,20 @@ export class ArticleService {
                 articleId, userToken
             }
         }).then(_ => {
-            this.removeArticleFromCache(articleId)
+            this.cacheService.removeArticleFromCache(articleId)
         })
     }
 
-    /**
-     * hack to remove the article from all queries
-     * @param articleId 
-     */
-    private removeArticleFromCache(articleId: string) {
-        const cache = this.cache as any
-        const cacheObjectId = `Article:${articleId}`
-
-        // delete the Article object
-        Object.keys(cache.data.data).forEach(key => {
-            if(key === cacheObjectId) {
-                cache.data.delete(key)
-            }
+    public async renewArticle(articleId: string, userToken: string): Promise<Article> {
+        const response = await this.apolloClient.mutate<RenewArticleMutationResponse>({
+            mutation: RENEW_ARTICE_MUTATION,
+            variables: { articleId, userToken }
         })
-
-        // delete the object from queries
-        Object.keys(cache.data.data.ROOT_QUERY).forEach(key => {
-            cache.data.data.ROOT_QUERY[key].forEach((queryObject: any, index: number, array: Array<any>) => {
-                if(queryObject.id === cacheObjectId) {
-                    array.splice(index, 1)
-                }
-            })
-        })
+        if(response.errors) {
+            throw new Error(`Error when renewing article: ${response.errors}`)
+        }
+        const result = response.data!.renewArticle as Article
+        this.cacheService.renewArticleInCache(result)
+        return result
     }
 }

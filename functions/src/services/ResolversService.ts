@@ -73,6 +73,12 @@ export class ResolverService {
                     }
                     
                     return result
+                },
+                async renewArticle(_rootValue, args): Promise<Article> {
+                    const articleId = args.articleId as string
+                    const userToken = args.userToken as string
+
+                    return await that.articlesService.renewArticle(articleId, userToken)
                 }
             }
         }

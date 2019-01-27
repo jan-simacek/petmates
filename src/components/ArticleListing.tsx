@@ -35,9 +35,23 @@ export class ArticleListing extends React.Component<ArticleListingProps, Article
     }
 
     private onArticleDelete(article: Article) {
-        const index = this.state.articles.indexOf(article)
+        const newItems = this.deleteArticleFromItems(article)
+        this.setState({articles: newItems})
+    }
+
+    private deleteArticleFromItems(article: Article): Array<Article> {
         const newItems = this.state.articles.slice(0)
-        newItems.splice(index, 1)
+        const art = newItems.find(item => item._id === article._id)
+        if(art) {
+            const index = newItems.indexOf(art)
+            newItems.splice(index, 1)
+        }
+        return newItems
+    }
+
+    private onRenewArticle(newArticle: Article) {
+        const newItems = this.deleteArticleFromItems(newArticle)
+        newItems.unshift(newArticle)
         this.setState({articles: newItems})
     }
 
@@ -54,7 +68,11 @@ export class ArticleListing extends React.Component<ArticleListingProps, Article
                             return (
                                 <Grid key={art._id} item>
                                     <Link to={`/article/${art._id}`} style={{ textDecoration: 'none' }}>
-                                        <ArticleCardContainer article={art} onDelete={this.onArticleDelete.bind(this)} />
+                                        <ArticleCardContainer 
+                                            article={art} 
+                                            onDelete={this.onArticleDelete.bind(this)} 
+                                            onRenew={this.onRenewArticle.bind(this)}
+                                        />
                                     </Link>
                                 </Grid>
                             )

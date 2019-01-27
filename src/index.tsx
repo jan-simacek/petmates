@@ -14,7 +14,7 @@ import firebase from 'firebase';
 import { BrowserRouter } from 'react-router-dom'
 import { Provider } from 'react-redux';
 import store from './store';
-import { UserService } from './services';
+import { UserService, GraphQLCacheService } from './services';
 
 var config = {
     apiKey: "AIzaSyCDSVW5vzFgauiBIhGQFdP0CC6Oy1AWeVQ",
@@ -29,7 +29,8 @@ firebase.initializeApp(config);
 const httpLink = createHttpLink({uri: "http://localhost:5001/petmates-2b6fe/us-central1/api/graphql"})
 export const cache = new InMemoryCache()
 export const client = new ApolloClient({link: httpLink, cache: cache})
-export const articleService = new ArticleService(client, cache)
+export const graphqlCacheService = new GraphQLCacheService(cache)
+export const articleService = new ArticleService(client, graphqlCacheService)
 export const provider = new firebase.auth.GoogleAuthProvider()
 export const auth = firebase.auth()
 export const userService = new UserService(auth)
