@@ -1,12 +1,13 @@
 import React, { Component, ReactNode } from "react";
-import { withStyles, AppBar, Toolbar, Typography } from "@material-ui/core";
-import { NavLink } from "react-router-dom";
-import { Routes } from "./";
+import { withStyles, AppBar, Toolbar, Typography, IconButton, Tooltip } from "@material-ui/core";
+import { NavLink, Link } from "react-router-dom";
+import { Routes, MbFadeIn, RoutesEnum } from "./";
 import './TopBar.css'
 import  { ProfileButtonContainer } from ".";
 import { CurrentUser } from "../reducers";
 import { NewArticleButton } from "./NewArticleButton";
-import { MbAlert } from "./MbAlert";
+import { MbAlert, FavoriteArticlesButton } from ".";
+import ChatIcon from '@material-ui/icons/Chat'
 
 const styles = {
     root: {
@@ -57,7 +58,7 @@ class TopBarClass extends Component<TopBarProps, TopBarState> {
         return (
             <div className={this.classes.root}>
                 <AppBar position="fixed">
-                    <Toolbar>
+                    <Toolbar className="topbar">
                         <Typography variant="h6" color="inherit" className={this.classes.rightIndent}>
                             Mňaubook
                         </Typography>
@@ -68,6 +69,18 @@ class TopBarClass extends Component<TopBarProps, TopBarState> {
                             <Typography variant="h6">Kocouři</Typography>
                         </NavLink>
                         <span className={this.classes.grow}>&nbsp;</span>
+                        <MbFadeIn>
+                            <Link to={RoutesEnum.FAVORITES}>
+                                <span className="favorites-icon">
+                                    <Tooltip title="Zprávy">
+                                        <IconButton>
+                                                <ChatIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                </span>                
+                            </Link>
+                        </MbFadeIn>
+                        <FavoriteArticlesButton />
                         <NewArticleButton currentUser={this.props.currentUser} showLoginAlert={this.showLoginAlert.bind(this)} />
                         <ProfileButtonContainer />
                         <MbAlert 

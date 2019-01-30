@@ -2,8 +2,16 @@ import React, { Component, ReactNode } from "react";
 import { CircularProgress } from "@material-ui/core";
 import './Loader.css'
 
-export class Loader extends Component {
+interface LoaderProps {
+    isSpan?: boolean
+}
+
+export class Loader extends Component<LoaderProps> {
     public render(): ReactNode {
-        return <div key='loader' className='loader-wrapper'><CircularProgress className='loader' /></div>
+        return (
+            this.props.isSpan ? 
+                <span key='loader' className='loader-wrapper'><CircularProgress className='loader' /></span> :
+                <div key='loader' className='loader-wrapper'><CircularProgress className='loader' /></div>
+        )
     }
 }

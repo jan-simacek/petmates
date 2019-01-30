@@ -1,11 +1,11 @@
 import React, { Component, ReactNode } from "react";
-import { Button, Avatar, Menu, MenuItem, IconButton, Fade } from "@material-ui/core";
+import { Button, Avatar, Menu, MenuItem, IconButton } from "@material-ui/core";
 import { auth, provider } from "../index";
 import { ArrowDropDown } from '@material-ui/icons'
 import './ProfileButton.css'
 import { CurrentUser } from "../reducers";
 import { NavLink } from "react-router-dom";
-import { RoutesEnum } from ".";
+import { RoutesEnum, MbFadeIn } from ".";
 
 interface ProfileButtonState {
     anchorEl: any
@@ -18,7 +18,6 @@ interface ProfileButtonProps {
 }
 
 export const RENDER_TIMEOUT = 3500
-export const FADEIN_SPEED = 1500
 export class ProfileButton extends Component<ProfileButtonProps, ProfileButtonState> {
     
     constructor(props: any){
@@ -63,7 +62,7 @@ export class ProfileButton extends Component<ProfileButtonProps, ProfileButtonSt
 
     public render(): ReactNode {
         return (
-            this.state.startRender && <Fade in={true} timeout={FADEIN_SPEED}>
+            this.state.startRender && <MbFadeIn>
                 <div>
                     {this.props.user ? 
                         (<div className="profile-container">{this.props.user.photoURL ? 
@@ -82,7 +81,7 @@ export class ProfileButton extends Component<ProfileButtonProps, ProfileButtonSt
                         <MenuItem onClick={this.closeMenu.bind(this)}><NavLink style={{textDecoration: 'none', color: 'rgba(0, 0, 0, 0.87)'}} to={RoutesEnum.MY_PROFILE}>MOJE INZERÁTY</NavLink></MenuItem>
                     </Menu>
                 </div>
-            </Fade>
+            </MbFadeIn>
         )
     }
 }

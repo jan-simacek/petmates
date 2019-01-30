@@ -1,4 +1,4 @@
-import { Theme, Typography, CardContent, CardActions, IconButton, Card, CardHeader, Avatar, CardMedia, Tooltip } from "@material-ui/core";
+import { Theme, Typography, CardContent, CardActions, IconButton, Card, CardHeader, Avatar, CardMedia, Tooltip, Snackbar } from "@material-ui/core";
 import { withStyles } from '@material-ui/core/styles';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import DeleteIcon from '@material-ui/icons/Delete'
@@ -10,6 +10,7 @@ import { firestoreService } from '../services'
 import { CurrentUser } from "../reducers";
 import { ButtonWithConfirmation } from "./ButtonWithConfirmation";
 import { articleService, userService } from "..";
+import { Loader } from '.'
 
 const styles = (theme: Theme) => (
     {
@@ -17,12 +18,6 @@ const styles = (theme: Theme) => (
         width: 400,
         height: 460,
         position: 'relative' as 'relative'
-    },
-    cardHeaderM: {
-        backgroundColor: '#d3e7ff'
-    },
-    cardHeaderF: {
-        backgroundColor: '#fddcf6'
     },
     media: {
         height: 0,
@@ -51,20 +46,28 @@ interface ArticleCardProps {
     article: Article
     currentUser?: CurrentUser
     onDelete: (article: Article) => void
-    onRenew: (article: Article) => void    
+    onRenew: (article: Article) => void  
+    onUpdateArticle: (article: Article) => void  
 }
 
 interface ArticleCardState {
     expanded: boolean
     articleImgUrl?: string
+    isLikeSubmitting: boolean
+    isLiked: boolean
+    likedSnackbarOpen: boolean
 }
 
 class ArticleCardClass extends React.Component<ArticleCardProps, ArticleCardState>{
     constructor(props: ArticleCardProps) {
         super(props)
-        this.state = { expanded: false, articleImgUrl: undefined}
+        this.state = { expanded: false, articleImgUrl: undefined, isLikeSubmitting: false, isLiked: false, likedSnackbarOpen: false}
         firestoreService.getImageDownloadUrl(this.props.article.imageId)
             .then(url => this.setState({articleImgUrl: url}))
+    }
+
+    public componentWillReceiveProps(nextProps: ArticleCardProps) {
+        this.setState({isLiked: nextProps.article.likedBy.includes(nextProps.currentUser!.uid)})
     }
 
     private onDeleteFinished() {
@@ -83,12 +86,31 @@ class ArticleCardClass extends React.Component<ArticleCardProps, ArticleCardStat
             .then(newArticle => this.props.onRenew(newArticle))
     }
 
+    private async onLikeClick(event: any): Promise<any> {
+        event.preventDefault()
+        this.setState({isLikeSubmitting: true})
+        if(!this.props.currentUser) {
+            return
+        }
+        const userToken = await userService.getCurrentUserToken()
+        const result = await articleService.addOrRemoveLike(this.props.article._id, userToken, !this.state.isLiked)
+        this.props.onUpdateArticle(result)
+        this.setState({isLikeSubmitting: false, likedSnackbarOpen: true})
+        return result
+    }
+
     render() {
         const { classes } = this.props
         return (
             <Card className={classes.card}>
+                <Snackbar 
+                    anchorOrigin={{vertical: 'bottom', horizontal: 'left'}}
+                    open={this.state.likedSnackbarOpen}
+                    onClose={() => this.setState({likedSnackbarOpen: false})}
+                    autoHideDuration={3000}
+                    message={<span>{this.state.isLiked ? "Přidáno k oblíbeným" : "Odebráno z oblíbených"}</span>}
+                />
                 <CardHeader
-                    className={this.props.article.isMale ? classes.cardHeaderM : classes.cardHeaderF}
                     avatar={
                         this.props.article.userPhotoUrl ? (
                             <Avatar className={classes.avatar} alt={this.props.article.userName} src={this.props.article.userPhotoUrl} />
@@ -132,11 +154,17 @@ class ArticleCardClass extends React.Component<ArticleCardProps, ArticleCardStat
                             </span>
                         ) : (
                             <span>
-                                <Tooltip title="Přidat k oblíbeným">
-                                    <IconButton aria-label="Přidat k oblíbeným">
-                                        <FavoriteIcon />
-                                    </IconButton>
-                                </Tooltip>
+                                {this.state.isLikeSubmitting ? 
+                                    (<Loader isSpan={true} />):
+                                    (<Tooltip title={this.state.isLiked ? "Odebrat z oblíbených" : "Přidat k oblíbeným"}>
+                                        <IconButton 
+                                            onClick={this.onLikeClick.bind(this)}
+                                            style={{color: this.state.isLiked ? '#77cfe8' : 'rgba(0, 0, 0, 0.54)'}}
+                                        >
+                                            <FavoriteIcon />
+                                        </IconButton>
+                                    </Tooltip>)
+                                }
                                 <Tooltip title="Poslat zprávu">
                                     <IconButton aria-label="Poslat zprávu">
                                         <ChatIcon />

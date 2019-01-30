@@ -6,6 +6,7 @@ export interface Article extends ArticleCommon {
     userName: string
     userPhotoUrl: string
     regionName: string
+    likedBy: string[]
 }
 
 export interface ArticleInput extends ArticleCommon{

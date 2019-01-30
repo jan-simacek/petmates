@@ -20,10 +20,9 @@ export interface Article extends ArticleCommon {
     userName: string
     regionName: string
     userPhotoUrl: string
+    likedBy: string[]
 }
-
-export const articleTypeDef = `
-type Article {
+export const articleFields = `
     _id: ID!
     breedName: String
     breedId: Int!
@@ -38,6 +37,11 @@ type Article {
     userId: String!
     userName: String
     userPhotoUrl: String
+    likedBy: [String]
+`
+export const articleTypeDef = `
+type Article {
+    ${articleFields}
 }
 
 input ArticleInput {

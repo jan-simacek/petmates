@@ -3,6 +3,23 @@ import {Article, ArticleInput} from "../model";
 import gql from "graphql-tag";
 import {NormalizedCacheObject, InMemoryCache} from 'apollo-cache-inmemory';
 import { GraphQLCacheService } from './GraphQLCacheService';
+import { UserService } from '.';
+
+const ARTICLE_FIELDS = `
+    _id
+    breedName
+    petName
+    petAge
+    isMale
+    createDate
+    imageId
+    articleText
+    userId
+    userName
+    userPhotoUrl
+    regionName
+    likedBy
+`
 
 const NEW_ARTICLE_MUTATION = gql`
   mutation NewArticleMutation(
@@ -30,20 +47,9 @@ const NEW_ARTICLE_MUTATION = gql`
 `
 
 const ARTICLES_QUERY = gql`
-    query Articles($lastDisplayedId: ID, $sex: String, $breedId: Int, $regionId: Int, $userId: ID) {
-        articles(lastDisplayedId: $lastDisplayedId, sex: $sex, breedId: $breedId, regionId: $regionId, userId: $userId) {
-            _id
-            breedName
-            petName
-            petAge
-            isMale
-            createDate
-            imageId
-            articleText
-            userId
-            userName
-            userPhotoUrl
-            regionName
+    query Articles($lastDisplayedId: ID, $sex: String, $breedId: Int, $regionId: Int, $userId: ID, $likedByToken: String) {
+        articles(lastDisplayedId: $lastDisplayedId, sex: $sex, breedId: $breedId, regionId: $regionId, userId: $userId, likedByToken: $likedByToken) {
+            ${ARTICLE_FIELDS}
         }
     }
 `
@@ -51,18 +57,7 @@ const ARTICLES_QUERY = gql`
 export const ARTICLE_QUERY = gql`
     query Article($articleId: ID) {
         article(articleId: $articleId) {
-            _id
-            breedName
-            petName
-            petAge
-            isMale
-            createDate
-            imageId
-            articleText
-            userId
-            userName
-            userPhotoUrl
-            regionName
+            ${ARTICLE_FIELDS}
         }
     }
 `
@@ -73,18 +68,7 @@ const DELETE_ARTICLE_MUTATION = gql`
         $userToken: String!
     ) {
         deleteArticle(articleId: $articleId,userToken: $userToken) {
-            _id
-            breedName
-            petName
-            petAge
-            isMale
-            createDate
-            imageId
-            articleText
-            userId
-            userName
-            userPhotoUrl
-            regionName
+            ${ARTICLE_FIELDS}
         }
     }
 `
@@ -95,18 +79,19 @@ const RENEW_ARTICE_MUTATION = gql`
         $userToken: String!
     ) {
         renewArticle(articleId: $articleId, userToken: $userToken) {
-            _id
-            breedName
-            petName
-            petAge
-            isMale
-            createDate
-            imageId
-            articleText
-            userId
-            userName
-            userPhotoUrl
-            regionName
+            ${ARTICLE_FIELDS}
+        }
+    }
+`
+
+const ADD_OR_REMOVE_LIKE_MUTATION = gql`
+    mutation AddOrRemoveLikeMutation(
+        $articleId: ID!,
+        $userToken: String!,
+        $isAdd: Boolean
+    ) {
+        addOrRemoveLike(articleId: $articleId, userToken: $userToken, isAdd: $isAdd){
+            ${ARTICLE_FIELDS}
         }
     }
 `
@@ -120,16 +105,22 @@ interface ArticleQueryResponse {
 interface RenewArticleMutationResponse {
     renewArticle: Article
 }
+interface AddOrRemoveLikeMutationResponse {
+    addOrRemoveLike: Article
+}
 
 export interface ArticleListFilter {
     sex?: string
     breedId?: number
     regionId?: number
     userId?: string
+    likedByUser?: boolean
 }
 
 export class ArticleService {
-    constructor(private apolloClient: ApolloClient<NormalizedCacheObject>, private cacheService: GraphQLCacheService) {}
+    constructor(private apolloClient: ApolloClient<NormalizedCacheObject>, 
+        private cacheService: GraphQLCacheService,
+        private userService: UserService) {}
 
     public addArticle(article: ArticleInput ): Promise<Article> {
         const result = this.apolloClient.mutate({mutation: NEW_ARTICLE_MUTATION, variables: {
@@ -148,12 +139,20 @@ export class ArticleService {
     }
 
     public async loadArticles(lastDisplayedId?: string, filter?: ArticleListFilter): Promise<Article[]> {
+        const token = filter && filter.likedByUser && await this.userService.getCurrentUserToken()
+        const sendFilter = (filter && {
+            sex: filter.sex, 
+            breedId: filter.breedId, 
+            regionId: filter.regionId, 
+            userId: filter.userId,
+            likedByToken: token
+        }) || {}
         const response = await this.apolloClient
             .query<ArticleListQueryResponse>({
                 query: ARTICLES_QUERY, 
                 variables: { 
                     lastDisplayedId: lastDisplayedId, 
-                    ...filter
+                    ...sendFilter
                 }
             })
         if(response.errors) {
@@ -191,6 +190,19 @@ export class ArticleService {
             throw new Error(`Error when renewing article: ${response.errors}`)
         }
         const result = response.data!.renewArticle as Article
+        this.cacheService.renewArticleInCache(result)
+        return result
+    }
+
+    public async addOrRemoveLike(articleId: string, userToken: string, isAdd: boolean): Promise<Article> {
+        const response = await this.apolloClient.mutate<AddOrRemoveLikeMutationResponse>({
+            mutation: ADD_OR_REMOVE_LIKE_MUTATION,
+            variables: { articleId, userToken, isAdd }
+        })
+        if(response.errors) {
+            throw new Error(`Error when adding or removing like: ${response.errors}`)
+        }
+        const result = response.data!.addOrRemoveLike as Article
         this.cacheService.renewArticleInCache(result)
         return result
     }

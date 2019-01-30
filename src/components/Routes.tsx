@@ -1,5 +1,5 @@
 import React, { Component, ReactNode } from "react";
-import { NewArticleForm, ArticleDetail, ArticleList } from ".";
+import { NewArticleForm, ArticleDetail, ArticleList, FavoriteArticles } from ".";
 import { Switch, Route } from "react-router";
 import { MyProfileContainer } from ".";
 
@@ -7,7 +7,8 @@ export enum RoutesEnum {
     NEW_ARTICLE = "/new-article",
     ARTICLE_LIST = "/article-list/:sex?/:breedId?/:regionId?",
     ARTICLE_DETAIL = "/article/:articleId",
-    MY_PROFILE = "/my-profile"
+    MY_PROFILE = "/my-profile",
+    FAVORITES = "/favorites"
 }
 
 export class Routes extends React.Component {
@@ -18,6 +19,7 @@ export class Routes extends React.Component {
                 <Route exact path={RoutesEnum.ARTICLE_LIST} component={ArticleList} />
                 <Route path={RoutesEnum.ARTICLE_DETAIL} component={ArticleDetail} />
                 <Route path={RoutesEnum.MY_PROFILE} component={MyProfileContainer} />
+                <Route path={RoutesEnum.FAVORITES} component={FavoriteArticles} />
             </Switch>
         )
     }

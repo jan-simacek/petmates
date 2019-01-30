@@ -38,13 +38,14 @@ export class ArticleDetail extends Component<ArticleDetailProps, ArticleDetailSt
             petName: "",
             userId: "",
             userName: "",
-            userPhotoUrl: ""
+            userPhotoUrl: "",
+            likedBy: []
         }, articleLoaded: false}
         articleService.loadArticleById(this.props.match.params.articleId)
-            .then(article => {
+            .then((article: Article) => {
                 this.setState({article: article, articleLoaded: true})
                 return firestoreService.getImageDownloadUrl(article.imageId)
-            }).then(url => this.setState({articleImgUrl: url}))
+            }).then((url: string) => this.setState({articleImgUrl: url}))
             
     }
 

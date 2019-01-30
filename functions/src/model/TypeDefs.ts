@@ -10,7 +10,7 @@ export const typeDefs = gql`
     ${Region.regionTypeDef}
     type Query {
         breeds: [Breed]
-        articles(lastDisplayedId: ID, sex: String, breedId: Int, regionId: Int, userId: ID): [Article]
+        articles(lastDisplayedId: ID, sex: String, breedId: Int, regionId: Int, userId: ID, likedByToken: String): [Article]
         article(articleId: ID): Article
         regions: [Region]
     }
@@ -19,5 +19,6 @@ export const typeDefs = gql`
         createArticle(articleInput: ArticleInput): Article
         deleteArticle(articleId: ID!, userToken: String!): Article
         renewArticle(articleId: ID!, userToken: String!): Article
+        addOrRemoveLike(articleId: ID!, userToken: String!, isAdd: Boolean): Article
     }
 `

@@ -41,18 +41,33 @@ export class ArticleListing extends React.Component<ArticleListingProps, Article
 
     private deleteArticleFromItems(article: Article): Array<Article> {
         const newItems = this.state.articles.slice(0)
-        const art = newItems.find(item => item._id === article._id)
-        if(art) {
-            const index = newItems.indexOf(art)
+        
+        const index = this.indexOfArticleInArray(article, newItems)
+        if(index >= 0) {
             newItems.splice(index, 1)
         }
         return newItems
+    }
+
+    private indexOfArticleInArray(article: Article, items: Article[]): number {
+        const art = items.find(item => item._id === article._id)
+        if(art) {
+            return items.indexOf(art)
+        }
+        return -1
     }
 
     private onRenewArticle(newArticle: Article) {
         const newItems = this.deleteArticleFromItems(newArticle)
         newItems.unshift(newArticle)
         this.setState({articles: newItems})
+    }
+
+    private updateArticle(newArticle: Article) {
+        const index = this.indexOfArticleInArray(newArticle, this.state.articles)
+        if(index >= 0) {
+            this.setState({articles: [...this.state.articles.slice(0, index), newArticle, ...this.state.articles.slice(index + 1)]})
+        }
     }
 
     public render(): ReactNode {
@@ -72,6 +87,7 @@ export class ArticleListing extends React.Component<ArticleListingProps, Article
                                             article={art} 
                                             onDelete={this.onArticleDelete.bind(this)} 
                                             onRenew={this.onRenewArticle.bind(this)}
+                                            onUpdateArticle={this.updateArticle.bind(this)}
                                         />
                                     </Link>
                                 </Grid>
@@ -94,7 +110,7 @@ export class ArticleListing extends React.Component<ArticleListingProps, Article
         }
 
         this.loadInProgress = true
-        articleService.loadArticles(lastDisplayed, this.props.filterState).then(articles => {
+        articleService.loadArticles(lastDisplayed, this.props.filterState).then((articles: Article[]) => {
             this.loadInProgress = false
             const newArticles = this.state.articles.slice().concat(articles)
             this.setState({articles: newArticles, hasMore: articles.length > 0})

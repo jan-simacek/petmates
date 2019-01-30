@@ -12,6 +12,7 @@ interface ArticleFilter {
     breedId?: number
     regionId?: number
     userId?: string
+    likedByUser?: string
 }
 
 export class ArticlesService {
@@ -76,6 +77,9 @@ export class ArticlesService {
         if(articleFilter.userId) {
             result = result.where('userId', '==', articleFilter.userId)
         }
+        if(articleFilter.likedByUser) {
+            result = result.where('likedBy', 'array-contains', articleFilter.likedByUser)
+        }
         
         return result
     }
@@ -112,7 +116,8 @@ export class ArticlesService {
             breedName: breed.breedName,
             userId: user.uid,
             userName: user.displayName,
-            userPhotoUrl: user.photoURL
+            userPhotoUrl: user.photoURL,
+            likedBy: []
         }
         console.log(docData)
         const docRef = await this.firestore
@@ -149,6 +154,25 @@ export class ArticlesService {
         await articleDoc.ref.update({createDate: dateNow})
         const article = await this.articleDocToArticle(articleDoc)
         article.createDate = new Date(dateNow)
+        return article
+    }
+
+    public async addOrRemoveLike(articleId: string, userToken: string, isAdd: boolean): Promise<Article> {
+        const articleDoc = await this.loadArticleDocById(articleId)
+        const user = await this.userService.resolveUser(userToken)
+
+        let likedBy = articleDoc.data().likedBy.slice(0)
+        if(isAdd) {
+            likedBy.push(user.uid)
+        } else {
+            const index = likedBy.indexOf(user.uid)
+            if(index >=0 ){
+                likedBy.splice(index, 1)
+            }
+        }
+        await articleDoc.ref.update({ likedBy })
+        const article = await this.articleDocToArticle(articleDoc)
+        article.likedBy = likedBy
         return article
     }
 }

@@ -30,10 +30,10 @@ const httpLink = createHttpLink({uri: "http://localhost:5001/petmates-2b6fe/us-c
 export const cache = new InMemoryCache()
 export const client = new ApolloClient({link: httpLink, cache: cache})
 export const graphqlCacheService = new GraphQLCacheService(cache)
-export const articleService = new ArticleService(client, graphqlCacheService)
-export const provider = new firebase.auth.GoogleAuthProvider()
 export const auth = firebase.auth()
 export const userService = new UserService(auth)
+export const articleService = new ArticleService(client, graphqlCacheService, userService)
+export const provider = new firebase.auth.GoogleAuthProvider()
 
 ReactDOM.render(
     <BrowserRouter>

@@ -1,5 +1,4 @@
 import { createMuiTheme }from '@material-ui/core'
-import { amber, orange, yellow } from '@material-ui/core/colors'
 
 
 export const theme = createMuiTheme({
@@ -35,6 +34,6 @@ export const theme = createMuiTheme({
         }
     },
     shape: {
-        borderRadius: 10
+        borderRadius: 2
     }
 })

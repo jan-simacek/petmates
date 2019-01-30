@@ -1,9 +1,9 @@
 import React, { ReactNode } from "react";
 import { CurrentUser } from "../reducers";
-import { RENDER_TIMEOUT, FADEIN_SPEED } from "./ProfileButton";
+import { RENDER_TIMEOUT } from "./ProfileButton";
 import { Button, Fade } from "@material-ui/core";
 import { NavLink } from "react-router-dom";
-import { RoutesEnum } from ".";
+import { RoutesEnum, MbFadeIn } from ".";
 
 interface NewArticleButtonProps {
     currentUser?: CurrentUser
@@ -29,7 +29,7 @@ export class NewArticleButton extends React.Component<NewArticleButtonProps, New
         }
 
         return (
-            <Fade in={true} timeout={FADEIN_SPEED}>
+            <MbFadeIn>
                 {this.props.currentUser ? 
                     (<NavLink to={RoutesEnum.NEW_ARTICLE} style={{textDecoration: 'none'}} className="new-article-btn">
                         <Button variant="contained" color="secondary">NOVÝ INZERÁT</Button>
@@ -41,7 +41,7 @@ export class NewArticleButton extends React.Component<NewArticleButtonProps, New
                         onClick={this.props.showLoginAlert.bind(this)}>
                             NOVÝ INZERÁT
                     </Button>)}
-            </Fade>
+            </MbFadeIn>
         )
     }
 

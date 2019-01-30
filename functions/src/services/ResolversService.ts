@@ -45,7 +45,12 @@ export class ResolverService {
                     const breedId = args.breedId as number
                     const regionId = args.regionId as number
                     const userId = args.userId as string
-                    return that.articlesService.loadAllArticles(lastDisplayedId, {sex, breedId, regionId, userId})
+                    let likedByUser = undefined
+                    if(args.likedByToken) {
+                        likedByUser = (await that.userService.resolveUser(args.likedByToken as string)).uid
+                    }
+
+                    return that.articlesService.loadAllArticles(lastDisplayedId, {sex, breedId, regionId, userId, likedByUser})
                 },
                 async article(_rootValue, args): Promise<Article> {
                     return that.articlesService.loadArticleById(args.articleId)
@@ -79,6 +84,13 @@ export class ResolverService {
                     const userToken = args.userToken as string
 
                     return await that.articlesService.renewArticle(articleId, userToken)
+                },
+                async addOrRemoveLike(_rootValue, args): Promise<Article> {
+                    const articleId = args.articleId as string
+                    const userToken = args.userToken as string
+                    const isAdd = args.isAdd as boolean
+
+                    return await that.articlesService.addOrRemoveLike(articleId, userToken, isAdd)
                 }
             }
         }
