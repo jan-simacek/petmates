@@ -1,8 +1,11 @@
 .content {
     margin-top: 4em;
-    background: rgb(235, 237, 238);
 }
 
 .heading {
     padding: 3em 2em;
+}
+
+html {
+    background: rgb(235, 237, 238);
 }
