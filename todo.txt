@@ -5,4 +5,4 @@
 - az budes delat favorities tak nezapomen pridat vymazani ty subkolekce do deleteArticle - firestore pri delete NEMAZE subkolekce
 - nakej automatickej resize na obrazky vetsi nez 3MB
 
-- votestovat a dodelat lajkovani
+- kdyz se zmensi screen tak nejsou videt buttonky v topbaru - asi bude potreba naky menu nebo neco

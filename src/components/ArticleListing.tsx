@@ -78,7 +78,7 @@ export class ArticleListing extends React.Component<ArticleListingProps, Article
                 hasMore={this.state.hasMore}
                 loader={<Loader key="loader" />}>
                 <div className="article-list">
-                    <Grid container spacing={24} justify="center">
+                    <Grid container spacing={24} justify="flex-start">
                         {this.state.articles.map(art => {
                             return (
                                 <Grid key={art._id} item>
