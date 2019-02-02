@@ -1,20 +1,17 @@
 import { GraphQLScalarType } from 'graphql';
 import { Kind } from 'graphql/language';
-import { Breed, Article, ArticleInput } from '../model'
+import { Breed, Article, ArticleInput, conversationFields, Conversation } from '../model'
 import { Query, Mutation } from "react-apollo";
-import { BreedsService } from './BreedsService';
-import { ArticlesService } from './ArticlesService';
 import { Region } from '../model/Region';
-import { RegionsService } from './RegionsService';
-import { StorageService } from './StorageService';
-import { UserService } from '.';
+import { BreedsService, ArticlesService, RegionsService, StorageService, ConversationService, UserService } from '.';
 
 export class ResolverService {
     constructor(private breedService: BreedsService, 
         private articlesService: ArticlesService, 
         private regionsService: RegionsService,
         private storageService: StorageService,
-        private userService: UserService) { }
+        private userService: UserService,
+        private conversationService: ConversationService) { }
 
     public getResolvers(): any {
         const that = this
@@ -57,6 +54,12 @@ export class ResolverService {
                 },
                 async regions(_rootValue): Promise<Region[]> {
                     return that.regionsService.loadAllRegions()
+                },
+                async conversations(_rootValue, args): Promise<Conversation[]> {
+                    const lastDisplayedId = args.lastDisplayedId as string
+                    const userToken = args.userToken as string
+
+                    return that.conversationService.loadConversations(userToken, lastDisplayedId)
                 }
             },
             Mutation: {

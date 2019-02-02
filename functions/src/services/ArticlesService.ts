@@ -5,7 +5,7 @@ import { UserService } from './UserService';
 import { RegionsService } from './RegionsService';
 import { FieldValue } from '@google-cloud/firestore';
 
-const PAGE_SIZE = 3
+const PAGE_SIZE = 20
 
 interface ArticleFilter {
     sex?: string
@@ -37,7 +37,7 @@ export class ArticlesService {
             .where(admin.firestore.FieldPath.documentId(), '==', id)
             .get()
         if(articles.docs.length == 0) {
-            return null
+            throw new Error(`Article ${id} not found`)
         }
         return articles.docs[0]
     }
@@ -119,7 +119,6 @@ export class ArticlesService {
             userPhotoUrl: user.photoURL,
             likedBy: []
         }
-        console.log(docData)
         const docRef = await this.firestore
             .collection('articles')
             .add(docData)

@@ -1,4 +1,4 @@
-import { BreedsService, ResolverService, UserService } from './services'
+import { BreedsService, ResolverService, UserService, ConversationService } from './services'
 import { ArticlesService } from './services/ArticlesService';
 import { RegionsService } from './services/RegionsService';
 import { serviceAccount } from './ServiceAccount'
@@ -17,4 +17,5 @@ export const userService = new UserService()
 export const regionsService = new RegionsService()
 export const articlesService = new ArticlesService(breedsService, userService, regionsService)
 export const storageService = new StorageService()
-export const resolversService = new ResolverService(breedsService, articlesService, regionsService, storageService, userService)
+export const conversationService = new ConversationService(userService)
+export const resolversService = new ResolverService(breedsService, articlesService, regionsService, storageService, userService, conversationService)

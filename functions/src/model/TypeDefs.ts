@@ -2,17 +2,20 @@ import { gql } from "apollo-server-express";
 import * as Article from './Article'
 import * as Breed from './Breed'
 import * as Region from './Region'
+import * as Conversation from './Conversation'
 
 export const typeDefs = gql`
     scalar Date
     ${Article.articleTypeDef}
     ${Breed.breedTypeDef}
     ${Region.regionTypeDef}
+    ${Conversation.conversationTypeDef}
     type Query {
         breeds: [Breed]
         articles(lastDisplayedId: ID, sex: String, breedId: Int, regionId: Int, userId: ID, likedByToken: String): [Article]
         article(articleId: ID): Article
         regions: [Region]
+        conversations(lastDisplayedId: ID, userToken: String!): [Conversation]
     }
    
     type Mutation {
