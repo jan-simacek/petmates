@@ -1,6 +1,6 @@
-import { RootState, getCurrentUser } from "../reducers";
+import { RootState, getCurrentUser } from "../../reducers";
 import { connect } from "react-redux";
-import { TopBar } from ".";
+import { TopBar } from "..";
 
 const mapStateToProps = (state: RootState) => {
     return {

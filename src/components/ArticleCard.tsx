@@ -8,7 +8,7 @@ import React from "react";
 import { Article } from "../model";
 import { firestoreService } from '../services'
 import { CurrentUser } from "../reducers";
-import { ButtonWithConfirmation } from "./ButtonWithConfirmation";
+import { ButtonWithConfirmation } from "./common/ButtonWithConfirmation";
 import { articleService, userService } from "..";
 import { Loader } from '.'
 

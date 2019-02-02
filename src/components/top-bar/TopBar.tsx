@@ -1,12 +1,12 @@
 import React, { Component, ReactNode } from "react";
 import { withStyles, AppBar, Toolbar, Typography, IconButton, Tooltip } from "@material-ui/core";
 import { NavLink, Link } from "react-router-dom";
-import { Routes, MbFadeIn, RoutesEnum } from "./";
+import { Routes, MbFadeIn, RoutesEnum } from "..";
 import './TopBar.css'
-import  { ProfileButtonContainer } from ".";
-import { CurrentUser } from "../reducers";
+import  { ProfileButtonContainer } from "..";
+import { CurrentUser } from "../../reducers";
 import { NewArticleButton } from "./NewArticleButton";
-import { MbAlert, FavoriteArticlesButton } from ".";
+import { MbAlert, FavoriteArticlesButton } from "..";
 import ChatIcon from '@material-ui/icons/Chat'
 
 const styles = {
@@ -70,7 +70,7 @@ class TopBarClass extends Component<TopBarProps, TopBarState> {
                         </NavLink>
                         <span className={this.classes.grow}>&nbsp;</span>
                         <MbFadeIn>
-                            <Link to={RoutesEnum.FAVORITES}>
+                            <Link to={RoutesEnum.MESSAGES}>
                                 <span className="favorites-icon">
                                     <Tooltip title="Zprávy">
                                         <IconButton>

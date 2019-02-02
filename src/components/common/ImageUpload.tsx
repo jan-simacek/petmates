@@ -3,8 +3,8 @@ import {Button, Typography, LinearProgress} from "@material-ui/core";
 import { Clear } from '@material-ui/icons'
 import React from "react";
 import firebase from "firebase"
-import { CurrentUser } from "../reducers";
-import { Loader } from ".";
+import { CurrentUser } from "../../reducers";
+import { Loader } from "..";
 
 const FirebaseFileUploader = require('react-firebase-file-uploader').default
 

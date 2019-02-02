@@ -5,7 +5,7 @@ import { Article } from '../model';
 import { articleService } from '../index'
 import { firestoreService } from '../services';
 import { Typography, Grid } from '@material-ui/core';
-import { Loader } from './Loader';
+import { Loader } from './common/Loader';
 
 interface ArticleDetailsRouteParams {
     articleId: string

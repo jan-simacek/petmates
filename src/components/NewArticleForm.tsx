@@ -11,7 +11,7 @@ import { Loader, ImageUploadContainer } from '.';
 import { BreedQuery, BREED_QUERY, RegionsQuery, REGIONS_QUERY } from './queries';
 import { match } from 'react-router-dom';
 import { History } from 'history'
-import { RoutesEnum } from './Routes';
+import { RoutesEnum } from '../Routes';
 
 interface NewArticleFormState {
     breedId: number

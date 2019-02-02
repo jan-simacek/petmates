@@ -1,11 +1,11 @@
 import React, { ReactNode } from "react";
-import { CurrentUser, RootState, getCurrentUser } from "../reducers";
-import { MbFadeIn } from ".";
+import { CurrentUser, RootState, getCurrentUser } from "../../reducers";
+import { MbFadeIn } from "..";
 import { IconButton, Tooltip } from "@material-ui/core";
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder'
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { RoutesEnum } from "./Routes";
+import { RoutesEnum } from "../../Routes";
 
 interface FavoriteArticlessButtonProps {
     currentUser?: CurrentUser

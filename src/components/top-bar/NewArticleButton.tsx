@@ -1,9 +1,9 @@
 import React, { ReactNode } from "react";
-import { CurrentUser } from "../reducers";
+import { CurrentUser } from "../../reducers";
 import { RENDER_TIMEOUT } from "./ProfileButton";
 import { Button, Fade } from "@material-ui/core";
 import { NavLink } from "react-router-dom";
-import { RoutesEnum, MbFadeIn } from ".";
+import { RoutesEnum, MbFadeIn } from "..";
 
 interface NewArticleButtonProps {
     currentUser?: CurrentUser

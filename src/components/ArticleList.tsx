@@ -4,7 +4,7 @@ import { match } from "react-router-dom";
 import { ArticleListFilter } from '../services';
 import { Filter } from '.';
 import { FilterState } from './Filter';
-import { Routes } from './Routes';
+import { Routes } from '../Routes';
 import { History } from 'history';
 import { ArticleListing } from './ArticleListing';
 

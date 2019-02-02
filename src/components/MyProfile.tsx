@@ -3,7 +3,7 @@ import React, { ReactNode } from "react";
 import { Typography } from '@material-ui/core';
 import { CurrentUser } from '../reducers';
 import { ArticleListing } from './ArticleListing';
-import { Loader } from './Loader';
+import { Loader } from './common/Loader';
 
 interface MyProfileProps {
     currentUser?: CurrentUser

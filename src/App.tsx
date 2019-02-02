@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
-import { Routes } from './components/Routes';
-import { TopBarContainer } from './components/TopBarContainer';
+import { Routes } from './Routes';
+import { TopBarContainer } from './components/top-bar/TopBarContainer';
 
 class App extends Component {
     render(): React.ReactNode {

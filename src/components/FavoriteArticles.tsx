@@ -3,7 +3,7 @@ import { Typography } from "@material-ui/core";
 import { ArticleListing } from "./ArticleListing";
 import { connect } from "react-redux";
 import { RootState, getCurrentUser, CurrentUser } from "../reducers";
-import { Loader } from "./Loader";
+import { Loader } from "./common/Loader";
 
 interface FavoriteArticlesProps {
     currentUser?: CurrentUser

@@ -1,4 +1,4 @@
-import { RootState, getCurrentUser } from "../reducers";
+import { RootState, getCurrentUser } from "../../reducers";
 import { connect } from "react-redux";
 import { ImageUpload } from "./ImageUpload";
 

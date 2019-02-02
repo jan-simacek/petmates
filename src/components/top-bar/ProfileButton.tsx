@@ -1,11 +1,11 @@
 import React, { Component, ReactNode } from "react";
 import { Button, Avatar, Menu, MenuItem, IconButton } from "@material-ui/core";
-import { auth, provider } from "../index";
+import { auth, provider } from "../../index";
 import { ArrowDropDown } from '@material-ui/icons'
 import './ProfileButton.css'
-import { CurrentUser } from "../reducers";
+import { CurrentUser } from "../../reducers";
 import { NavLink } from "react-router-dom";
-import { RoutesEnum, MbFadeIn } from ".";
+import { RoutesEnum, MbFadeIn } from "..";
 
 interface ProfileButtonState {
     anchorEl: any
