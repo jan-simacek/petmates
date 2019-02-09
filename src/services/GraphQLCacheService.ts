@@ -8,8 +8,10 @@ export class GraphQLCacheService {
      * @param articleId 
      */
     public removeArticleFromCache(articleId: string) {
+        this.removeItemFromCache(this.computeArticleCacheId(articleId))
+    }
+    private removeItemFromCache(cacheObjectId: string) {
         const cache = this.cache as any
-        const cacheObjectId = this.computeCacheId(articleId)
 
         // delete the Article object
         Object.keys(cache.data.data).forEach(key => {
@@ -28,13 +30,13 @@ export class GraphQLCacheService {
         })
     }
 
-    private computeCacheId(articleId: string) {
+    private computeArticleCacheId(articleId: string) {
         return  `Article:${articleId}`
     }
 
     public renewArticleInCache(article: Article) {
         const cache = this.cache as any
-        const cacheObjectId = this.computeCacheId(article._id)
+        const cacheObjectId = this.computeArticleCacheId(article._id)
 
         // replace the ArticleObject with the new one
         Object.keys(cache.data.data).forEach(key => {
@@ -43,5 +45,13 @@ export class GraphQLCacheService {
                 return
             }
         })
+    }
+
+    public removeConversationFromCache(conversationId: string) {
+        this.removeItemFromCache(this.computeConversationCacheId(conversationId))
+    }
+    
+    private computeConversationCacheId(conversationId: string) {
+        return `Conversation:${conversationId}`
     }
 }

@@ -15,6 +15,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { Provider } from 'react-redux';
 import store from './store';
 import { UserService, GraphQLCacheService } from './services';
+import { ConversationService } from './services/ConversationService';
 
 var config = {
     apiKey: "AIzaSyCDSVW5vzFgauiBIhGQFdP0CC6Oy1AWeVQ",
@@ -33,6 +34,7 @@ export const graphqlCacheService = new GraphQLCacheService(cache)
 export const auth = firebase.auth()
 export const userService = new UserService(auth)
 export const articleService = new ArticleService(client, graphqlCacheService, userService)
+export const conversationService = new ConversationService(client, userService)
 export const provider = new firebase.auth.GoogleAuthProvider()
 
 ReactDOM.render(

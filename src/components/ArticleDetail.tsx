@@ -3,7 +3,7 @@ import React, { Component, ReactNode } from "react";
 import { match } from "react-router";
 import { Article } from '../model';
 import { articleService } from '../index'
-import { firestoreService } from '../services';
+import { firestoreService, Util } from '../services';
 import { Typography, Grid } from '@material-ui/core';
 import { Loader } from './common/Loader';
 
@@ -74,7 +74,7 @@ export class ArticleDetail extends Component<ArticleDetailProps, ArticleDetailSt
                                 </Grid>
                                 <Grid item className="structured-info-block">
                                     <Typography variant="h6" style={{display: 'inline-block'}}>
-                                        Vytvořeno: {new Intl.DateTimeFormat('cs-CZ').format(new Date(this.state.article.createDate))}
+                                        Vytvořeno: {Util.formatDate(this.state.article.createDate)}
                                     </Typography>
                                 </Grid>
                             </Grid>

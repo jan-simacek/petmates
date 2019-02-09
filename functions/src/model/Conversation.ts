@@ -2,7 +2,7 @@ export interface Conversation {
     _id: string
     otherUid: string
     otherUserName: string
-    otherUserPhotoUrl: string
+    otherUserPhotoUrl?: string
     lastUpdate: Date
     lastMessage: string
 }

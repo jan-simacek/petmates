@@ -1,10 +1,15 @@
 import './Messages.css'
 import React, { ReactNode } from "react";
-import { Typography, Grid, Card, CardHeader, Avatar, IconButton, CardMedia, CardContent, CardActions, Collapse, withStyles } from "@material-ui/core";
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import { Typography, Grid, Card, CardHeader, Avatar, IconButton, CardContent, withStyles } from "@material-ui/core";
+import InfiniteScroll from 'react-infinite-scroller'
+import DeleteIcon from '@material-ui/icons/Delete'
+import { Conversation } from '../../model';
+import { conversationService } from '../..';
+import { Loader } from '..';
+import { RootState, getCurrentUser, CurrentUser } from '../../reducers';
+import { connect } from 'react-redux';
+import { Util } from '../../services';
+import { ButtonWithConfirmation } from '../common/ButtonWithConfirmation';
 
 const styles = (theme: any) => ({
     card: {
@@ -41,10 +46,25 @@ const styles = (theme: any) => ({
   });
 
 interface MessagesProps {
-    classes: any
+    classes: any,
+    currentUser?: CurrentUser
 }
 
-class MessagesClass extends React.Component<MessagesProps> {
+interface MessagesState { 
+    messages: Conversation[]
+    hasMore: boolean
+}
+
+class MessagesClass extends React.Component<MessagesProps, MessagesState> {
+    private loadInProgress = false;
+
+    constructor(props: MessagesProps) {
+        super(props)
+        this.state = { 
+            messages: [],
+            hasMore: true
+        }
+    }
 
     public render(): ReactNode {
         const classes = this.props.classes
@@ -54,36 +74,76 @@ class MessagesClass extends React.Component<MessagesProps> {
                     <Typography variant="h2">Zprávy</Typography>
                 </div>
                 <div className="message-list">
-                    <Grid direction="column" spacing={16} alignItems="center" container>
-                        <Grid item xs={12} md={11}>
-                            <Card className={classes.card}>
-                                <CardHeader
-                                avatar={
-                                    <Avatar aria-label="Recipe" className={classes.avatar}>
-                                    R
-                                    </Avatar>
-                                }
-                                action={
-                                    <IconButton>
-                                        <MoreVertIcon />
-                                    </IconButton>
-                                }
-                                title="Shrimp and Chorizo Paella"
-                                subheader="September 14, 2016"
-                                />
-                                <CardContent className={classes.cardContent}>
-                                        This impressive paella is a perfect party dish and a fun meal to cook together with your
-                                        guests. Add 1 cup of frozen peas along with the mussels, if you like. qwe rqwoeir oweiur qowieu roqwieur oqiuew roiqw
-                                        oqwie roqwieu rqowieu rqw
-                                        oq iwuer oqiwuer oqiwue roqiwue roqiwue orqiwue oiqrue 
-                                </CardContent>
-                            </Card>
+                    <InfiniteScroll
+                    pageStart={0}
+                    loadMore={this.loadMore.bind(this)}
+                    hasMore={this.state.hasMore}
+                    loader={<Loader key="loader" />}>
+                        <Grid direction="column" spacing={16} alignItems="center" container>
+                            {this.state.messages.map((message: Conversation) => {
+                                return (
+                                    <Grid item xs={12} md={11} style={{width: '100%'}} key={message._id}>
+                                        <Card className={classes.card}>
+                                            <CardHeader
+                                            avatar={
+                                                message.otherUserPhotoUrl ? (
+                                                    <Avatar className={classes.avatar} alt={message.otherUserName} src={message.otherUserPhotoUrl} />
+                                                ) :(
+                                                    <Avatar className={classes.avatar} alt={message.otherUserName}>
+                                                        {message.otherUserName.substring(0,1)}
+                                                    </Avatar>
+                                                )
+                                            }
+                                            action={
+                                                <IconButton>
+                                                    <ButtonWithConfirmation onOk={()=> new Promise((resolve, reject) => {
+                                                        setTimeout(() => resolve(), 500)
+                                                    })} title="Smazat konverzaci" text="Opravdu mám smazat tuto konverzaci?">
+                                                        <DeleteIcon />
+                                                    </ButtonWithConfirmation>
+                                                </IconButton>
+                                            }
+                                            title={message.otherUserName}
+                                            subheader={Util.formatDate(message.lastUpdate)}
+                                            />
+                                            <CardContent className={classes.cardContent}>
+                                                <Typography variant="body1">{message.lastMessage}</Typography>
+                                            </CardContent>
+                                        </Card>
+                                    </Grid>
+                                )
+                            })}
                         </Grid>
-                    </Grid>
+                    </InfiniteScroll>
                 </div>
             </div>
         )
     }
+    
+    private loadMore() {
+        if(this.loadInProgress || !this.props.currentUser) {
+            return
+        }
+
+        let lastDisplayed = undefined
+        if(this.state.messages.length > 0) {
+            lastDisplayed = this.state.messages[this.state.messages.length - 1]._id
+        }
+
+        this.loadInProgress = true
+        conversationService.loadConversations(lastDisplayed)
+            .then((conversations: Conversation[]) => {
+                this.loadInProgress = false
+                const newConversations = this.state.messages.slice().concat(conversations)
+                this.setState({messages: newConversations, hasMore: conversations.length > 0})
+            })
+    }
 }
 
-export const MessagesContainer = withStyles(styles)(MessagesClass)
+const mapStateToProps = (rootState: RootState) => {
+    return { 
+        currentUser: getCurrentUser(rootState)
+    }
+}
+
+export const MessagesContainer = connect(mapStateToProps)(withStyles(styles)(MessagesClass))

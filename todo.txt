@@ -7,3 +7,4 @@
 - popremejslet jestli nekery veci nedelat optimistic (treba klik na like)
 
 - kdyz se zmensi screen tak nejsou videt buttonky v topbaru - asi bude potreba naky menu nebo neco
+- nakej limit na dylku zpravy by to chtelo asi
