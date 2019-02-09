@@ -94,8 +94,14 @@ export class ResolverService {
                     const isAdd = args.isAdd as boolean
 
                     return await that.articlesService.addOrRemoveLike(articleId, userToken, isAdd)
+                },
+                async deleteConversation(_rootValue, args): Promise<Conversation> {
+                    const conversationId = args.conversationId as string
+                    const userToken = args.userToken as string
+
+                    return await this.conversationService.deleteConversation(conversationId, userToken)
                 }
-            }
+             }
         }
     }
 }

@@ -2,13 +2,14 @@ import * as admin from 'firebase-admin'
 import { Conversation, ConversationDb } from "../model";
 import { UserService } from '.';
 import { QueryDocumentSnapshot } from '@google-cloud/firestore';
+import { MessagesService } from './MessagesService';
 
 const PAGE_SIZE = 20
 
 export class ConversationService {
     private readonly firestore = admin.firestore();
 
-    constructor(private userService: UserService) {}
+    constructor(private userService: UserService, private messagesService: MessagesService) {}
 
     public async loadConversations(userToken: string, lastDisplayedId?: string): Promise<Conversation[]> {
         const user = await this.userService.resolveUser(userToken)
@@ -83,10 +84,20 @@ export class ConversationService {
             .doc(conversationId)
             .update({participantUids: newParticipantUids})
 
+        if(newParticipantUids.length == 0) {
+            this.purgeConversationAndMessages(conversationId)
+        }
+
         return await this.conversationDocToConversation(conversationDoc, user.uid)
     }
 
     private async purgeConversationAndMessages(conversationId: string): Promise<any> {
-        
+        await this.messagesService.deleteConversationMessages(conversationId)
+        const docRef = this.firestore
+            .collection('conversations')
+            .doc(conversationId)
+        await docRef
+            .update({participantUids: undefined, participants: undefined})
+        return docRef.delete()
     }
 }

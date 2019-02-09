@@ -138,6 +138,10 @@ class MessagesClass extends React.Component<MessagesProps, MessagesState> {
                 this.setState({messages: newConversations, hasMore: conversations.length > 0})
             })
     }
+
+    private deleteConversation(): Promise<any> {
+        
+    }
 }
 
 const mapStateToProps = (rootState: RootState) => {

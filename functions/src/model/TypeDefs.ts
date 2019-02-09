@@ -23,5 +23,6 @@ export const typeDefs = gql`
         deleteArticle(articleId: ID!, userToken: String!): Article
         renewArticle(articleId: ID!, userToken: String!): Article
         addOrRemoveLike(articleId: ID!, userToken: String!, isAdd: Boolean): Article
+        deleteConversation(conversationId: ID!, userToken: String!): Conversation
     }
 `
