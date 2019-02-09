@@ -25,21 +25,46 @@ const CONVERSATION_QUERY = gql`
     }
 `
 
+interface DeleteConversationResponse {
+    deleteConversation: Conversation
+}
+
+const DELETE_CONVERSATION_MUTATION = gql`
+    mutation DeleteConversation($conversationId: ID!, $userToken: String!) {
+        deleteConversation(conversationId: $conversationId, userToken: $userToken) {
+            ${conversationFields}
+        }
+    }
+`
+
 export class ConversationService {
     constructor(private apolloClient: ApolloClient<NormalizedCacheObject>, 
-        private userService: UserService) {}
+        private userService: UserService,
+        private graphqlCacheService: GraphQLCacheService) {}
 
     public async loadConversations(lastDisplayedId?: string): Promise<Conversation[]> {
         const userToken = await this.userService.getCurrentUserToken()
-        const variables = { lastDisplayedId, userToken }
         const response = await this.apolloClient.query<ConversationResponse>({
             query: CONVERSATION_QUERY,
-            variables
+            variables: { lastDisplayedId, userToken }
         })
         if(response.errors) {
             throw new Error(`Problem when loading conversations: ${response.errors}`)
         }
         return response.data.conversations as Conversation[]
+    }
+
+    public async deleteConversation(conversationId: string): Promise<Conversation> {
+        const userToken = await this.userService.getCurrentUserToken()
+        const response = await this.apolloClient.mutate<DeleteConversationResponse>({
+            mutation: DELETE_CONVERSATION_MUTATION, 
+            variables: {conversationId, userToken}
+        })
+        if(response.errors) {
+            throw new Error(`Problem when deleting conversation: ${response.errors}`)
+        }
+        this.graphqlCacheService.removeConversationFromCache(conversationId)
+        return response.data!.deleteConversation as Conversation
     }
 
 }

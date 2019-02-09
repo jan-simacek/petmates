@@ -78,7 +78,8 @@ export class ConversationService {
         if(index < 0) {
             throw new Error(`Only participants can delete conversation`)
         }
-        const newParticipantUids = conversationDb.participantUids.splice(index, 1)
+        const newParticipantUids = conversationDb.participantUids.slice()
+        newParticipantUids.splice(index, 1)
         await this.firestore
             .collection('conversations')
             .doc(conversationId)
@@ -97,7 +98,7 @@ export class ConversationService {
             .collection('conversations')
             .doc(conversationId)
         await docRef
-            .update({participantUids: undefined, participants: undefined})
+            .update({participantUids: [], participants: []})
         return docRef.delete()
     }
 }

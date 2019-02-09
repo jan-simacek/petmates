@@ -10,6 +10,7 @@ import { RootState, getCurrentUser, CurrentUser } from '../../reducers';
 import { connect } from 'react-redux';
 import { Util } from '../../services';
 import { ButtonWithConfirmation } from '../common/ButtonWithConfirmation';
+import { ItemListingDelegate, ItemListingState } from '../common/ItemListingDelegate';
 
 const styles = (theme: any) => ({
     card: {
@@ -51,19 +52,24 @@ interface MessagesProps {
 }
 
 interface MessagesState { 
-    messages: Conversation[]
+    items: Conversation[]
     hasMore: boolean
 }
 
 class MessagesClass extends React.Component<MessagesProps, MessagesState> {
     private loadInProgress = false;
+    private delegate: ItemListingDelegate<Conversation>
 
     constructor(props: MessagesProps) {
         super(props)
         this.state = { 
-            messages: [],
+            items: [],
             hasMore: true
         }
+        this.delegate = new ItemListingDelegate({
+            loadMore: (lastDisplayedId?: string) => conversationService.loadConversations(lastDisplayedId),
+            setState: (newState: ItemListingState<Conversation>) => this.setState(newState)
+        })
     }
 
     public render(): ReactNode {
@@ -80,34 +86,31 @@ class MessagesClass extends React.Component<MessagesProps, MessagesState> {
                     hasMore={this.state.hasMore}
                     loader={<Loader key="loader" />}>
                         <Grid direction="column" spacing={16} alignItems="center" container>
-                            {this.state.messages.map((message: Conversation) => {
+                            {this.state.items.map((conversation: Conversation) => {
                                 return (
-                                    <Grid item xs={12} md={11} style={{width: '100%'}} key={message._id}>
+                                    <Grid item xs={12} md={11} style={{width: '100%'}} key={conversation._id}>
                                         <Card className={classes.card}>
                                             <CardHeader
                                             avatar={
-                                                message.otherUserPhotoUrl ? (
-                                                    <Avatar className={classes.avatar} alt={message.otherUserName} src={message.otherUserPhotoUrl} />
+                                                conversation.otherUserPhotoUrl ? (
+                                                    <Avatar className={classes.avatar} alt={conversation.otherUserName} src={conversation.otherUserPhotoUrl} />
                                                 ) :(
-                                                    <Avatar className={classes.avatar} alt={message.otherUserName}>
-                                                        {message.otherUserName.substring(0,1)}
+                                                    <Avatar className={classes.avatar} alt={conversation.otherUserName}>
+                                                        {conversation.otherUserName.substring(0,1)}
                                                     </Avatar>
                                                 )
                                             }
                                             action={
-                                                <IconButton>
-                                                    <ButtonWithConfirmation onOk={()=> new Promise((resolve, reject) => {
-                                                        setTimeout(() => resolve(), 500)
-                                                    })} title="Smazat konverzaci" text="Opravdu mám smazat tuto konverzaci?">
-                                                        <DeleteIcon />
-                                                    </ButtonWithConfirmation>
-                                                </IconButton>
+                                                <ButtonWithConfirmation onOk={() => this.deleteConversation(conversation._id)} 
+                                                        title="Smazat konverzaci" text="Opravdu mám smazat tuto konverzaci?">
+                                                    <DeleteIcon />
+                                                </ButtonWithConfirmation>
                                             }
-                                            title={message.otherUserName}
-                                            subheader={Util.formatDate(message.lastUpdate)}
+                                            title={conversation.otherUserName}
+                                            subheader={Util.formatDate(conversation.lastUpdate)}
                                             />
                                             <CardContent className={classes.cardContent}>
-                                                <Typography variant="body1">{message.lastMessage}</Typography>
+                                                <Typography variant="body1">{conversation.lastMessage}</Typography>
                                             </CardContent>
                                         </Card>
                                     </Grid>
@@ -121,26 +124,15 @@ class MessagesClass extends React.Component<MessagesProps, MessagesState> {
     }
     
     private loadMore() {
-        if(this.loadInProgress || !this.props.currentUser) {
+        if(!this.props.currentUser) {
             return
         }
-
-        let lastDisplayed = undefined
-        if(this.state.messages.length > 0) {
-            lastDisplayed = this.state.messages[this.state.messages.length - 1]._id
-        }
-
-        this.loadInProgress = true
-        conversationService.loadConversations(lastDisplayed)
-            .then((conversations: Conversation[]) => {
-                this.loadInProgress = false
-                const newConversations = this.state.messages.slice().concat(conversations)
-                this.setState({messages: newConversations, hasMore: conversations.length > 0})
-            })
+        this.delegate.loadMore()
     }
 
-    private deleteConversation(): Promise<any> {
-        
+    private async deleteConversation(conversationId: string): Promise<any> {
+        const deletedConversation = await conversationService.deleteConversation(conversationId)
+        this.delegate.deleteItem(deletedConversation)
     }
 }
 

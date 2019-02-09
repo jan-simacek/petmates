@@ -99,7 +99,7 @@ export class ResolverService {
                     const conversationId = args.conversationId as string
                     const userToken = args.userToken as string
 
-                    return await this.conversationService.deleteConversation(conversationId, userToken)
+                    return await that.conversationService.deleteConversation(conversationId, userToken)
                 }
              }
         }

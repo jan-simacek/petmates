@@ -34,7 +34,7 @@ export const graphqlCacheService = new GraphQLCacheService(cache)
 export const auth = firebase.auth()
 export const userService = new UserService(auth)
 export const articleService = new ArticleService(client, graphqlCacheService, userService)
-export const conversationService = new ConversationService(client, userService)
+export const conversationService = new ConversationService(client, userService, graphqlCacheService)
 export const provider = new firebase.auth.GoogleAuthProvider()
 
 ReactDOM.render(
