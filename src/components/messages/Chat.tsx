@@ -48,64 +48,62 @@ class ChatClass extends React.Component<ChatProps, ChatState> {
         return (
             <div className="content">
                 <div className="heading">
-                    <div className="chat">
-                        <div className="chat-heading">
-                            <Grid container direction="row">
-                                <Grid item style={{display: 'flex', alignItems: 'center'}}>
-                                    <Typography variant="headline">{this.state.conversation && this.state.conversation.otherUserName}</Typography>
-                                </Grid>
+                    <div className="chat-heading center">
+                        <Grid container direction="row">
+                            <Grid item style={{display: 'flex', alignItems: 'center'}}>
+                                <Typography variant="headline">{this.state.conversation && this.state.conversation.otherUserName}</Typography>
                             </Grid>
-                        </div>
+                        </Grid>
+                    </div>
 
-                        <div className="chat-feed">
-                            {this.props.currentUser && (
-                                <ChatFeed currentUser={this.props.currentUser}
-                                    hasMore={this.state.hasMore}
-                                    items={this.state.items}
-                                    loadPageOfItems={this.loadPageOfItems.bind(this)}
-                                    loading={this.state.loading}
-                                /> 
-                            )}
-                        </div>
+                    <div className="chat-feed center">
+                        {this.props.currentUser && (
+                            <ChatFeed currentUser={this.props.currentUser}
+                                hasMore={this.state.hasMore}
+                                items={this.state.items}
+                                loadPageOfItems={this.loadPageOfItems.bind(this)}
+                                loading={this.state.loading}
+                            /> 
+                        )}
+                    </div>
 
-                        <Formik initialValues={this.state.chatFormState}
-                            validate={this.validate}
-                            onSubmit={(values: ChatFormState, {setSubmitting, resetForm}) => {
-                                setSubmitting(true)
-                                this.onSubmit(values, resetForm).then(() => setSubmitting(false))
-                            }}
-                            validateOnBlur={false} validateOnChange={false}
-                        >
-                            {({errors, touched, isSubmitting, submitForm}) => {
-                            return (
-                                <Form className="composed-message">
-                                    <Grid container direction="row">
-                                        <Grid item xs={11}>
-                                            <FormControl disabled={isSubmitting} style={{width: '100%'}}>
-                                                <Field name="composedMessage" render={(props: any) => (
-                                                    <MTextField {...fieldToTextField(props)} multiline={true} rows={4}
-                                                        label="Napište zprávu" style={{width: '100%'}}  
-                                                        onKeyDown={(event: any) => {
-                                                            if(event.keyCode == 13 && event.ctrlKey) {
-                                                                submitForm()
-                                                            }
-                                                        }}
-                                                        autoFocus={true}/>
-                                                )}/>
-                                            </FormControl>
-                                        </Grid>
-                                        <Grid item xs={1} alignContent="center" justify="center" container direction="row">
-                                            <Grid item style={{display: 'flex'}}>
-                                                <IconButton>
-                                                    <SendIcon className="send-icon" onClick={submitForm}/>
-                                                </IconButton>
-                                            </Grid>
+                    <Formik initialValues={this.state.chatFormState}
+                        validate={this.validate}
+                        onSubmit={(values: ChatFormState, {setSubmitting, resetForm}) => {
+                            setSubmitting(true)
+                            this.onSubmit(values, resetForm).then(() => setSubmitting(false))
+                        }}
+                        validateOnBlur={false} validateOnChange={false}
+                    >
+                        {({errors, touched, isSubmitting, submitForm}) => {
+                        return (
+                            <Form className="composed-message center">
+                                <Grid container direction="row">
+                                    <Grid item xs={11}>
+                                        <FormControl disabled={isSubmitting} style={{width: '100%'}}>
+                                            <Field name="composedMessage" render={(props: any) => (
+                                                <MTextField {...fieldToTextField(props)} multiline={true} rows={4}
+                                                    label="Napište zprávu" style={{width: '100%'}}  
+                                                    onKeyDown={(event: any) => {
+                                                        if(event.keyCode == 13 && event.ctrlKey) {
+                                                            submitForm()
+                                                        }
+                                                    }}
+                                                    autoFocus={true}/>
+                                            )}/>
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item xs={1} alignContent="center" justify="center" container direction="row">
+                                        <Grid item style={{display: 'flex'}}>
+                                            <IconButton>
+                                                <SendIcon className="send-icon" onClick={submitForm}/>
+                                            </IconButton>
                                         </Grid>
                                     </Grid>
-                                </Form>
-                            )}}
-                        </Formik>
-                    </div>
+                                </Grid>
+                            </Form>
+                        )}}
+                    </Formik>
                 </div>
             </div>
         )

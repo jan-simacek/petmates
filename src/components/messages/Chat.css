@@ -34,6 +34,7 @@
     padding: 1em;
     text-align: center;
 }
-.chat {
-    margin: auto
+.center {
+    margin-left: auto;
+    margin-right: auto;
 }
