@@ -1,10 +1,10 @@
 import gql from "graphql-tag";
-import { Message } from "../model";
+import { Message, MessageInput } from "../model";
 import ApolloClient from "apollo-client";
 import { NormalizedCacheObject } from "apollo-cache-inmemory";
 import { GraphQLCacheService, UserService } from ".";
 
-export const MESSAGE_FIELDS = `
+const MESSAGE_FIELDS = `
     _id
     conversationId
     fromUid
@@ -22,8 +22,20 @@ export const MESSAGES_QUERY = gql`
     }
 `
 
-export interface MessagesQueryResponse {
+const CREATE_MESSAGE_MUTATION = gql`
+    mutation CreateTextMessage($conversationId: ID!, $userToken: String!, $content: String) {
+        createTextMessage(conversationId: $conversationId, userToken: $userToken, content: $content) {
+            ${MESSAGE_FIELDS}
+        }
+    }
+`
+
+interface MessagesQueryResponse {
     messages: Message[]
+}
+
+interface CreateTextMessageResponse {
+    createTextMessage: Message
 }
 
 export class MessageService {
@@ -48,5 +60,20 @@ export class MessageService {
         }
 
         return response.data.messages as Message[]
+    }
+
+    public async addTextMessage(messageInput: MessageInput): Promise<Message> {
+        const userToken = await this.userService.getCurrentUserToken()
+
+        let response = await this.apolloClient.mutate<CreateTextMessageResponse>({
+            mutation: CREATE_MESSAGE_MUTATION,
+            variables: {
+                conversationId: messageInput.conversationId,
+                userToken,
+                content: messageInput.content
+            }
+        })
+
+        return response.data!.createTextMessage as Message
     }
 }

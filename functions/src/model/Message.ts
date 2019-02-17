@@ -4,11 +4,11 @@ export enum MessageType {
 
 export interface Message {
     _id: string
-    conversationId: string
     fromUid: string
     toUid: string
     createDate: Date
     type: MessageType
+    conversationId: string
     content: string
 }
 

@@ -1,27 +1,14 @@
 import * as admin from 'firebase-admin'
 import { QuerySnapshot, QueryDocumentSnapshot, DocumentSnapshot } from '@google-cloud/firestore';
-import { Message } from '../model';
+import { Message, MessageType } from '../model';
 import { UserService } from './UserService';
+import { ConversationService } from './ConversationService';
 
-const DELETE_BATCH_SIZE = 100
 const LOAD_PAGE_SIZE = 20
 
 export class MessagesService {
     private readonly firestore = admin.firestore();
-    constructor(private userService: UserService) {}
-
-    public async deleteConversationMessages(conversationId: string): Promise<any> {
-        let batch: QuerySnapshot = undefined
-        do {
-            batch = await this.firestore
-                .collection('messages')
-                .where('conversationId', '==', conversationId)
-                .limit(DELETE_BATCH_SIZE)
-                .get()
-            
-            await Promise.all(batch.docs.map(doc => this.firestore.collection('messages').doc(doc.id).delete()))
-        } while(batch.docs.length > 0)
-    }
+    constructor(private userService: UserService, private conversationService: ConversationService) {}
 
     private async loadMessageDocById(messageId: string): Promise<DocumentSnapshot> {
         return await this.firestore.collection('messages').doc(messageId).get()
@@ -36,7 +23,6 @@ export class MessagesService {
     }
 
     public async loadMessages(conversationId: string, userToken: string, lastDisplayedId?: string): Promise<Message[]> {
-        console.log(`lastDisplayedID: ${lastDisplayedId}`)
         const user = await this.userService.resolveUser(userToken)
 
         let query = this.firestore
@@ -47,7 +33,6 @@ export class MessagesService {
 
         if(lastDisplayedId) {
             const messageDoc = await this.loadMessageDocById(lastDisplayedId)
-            console.log(`messageDoc: ${JSON.stringify(messageDoc)}`)
             query = query.startAfter(messageDoc)
         }
 
@@ -58,5 +43,29 @@ export class MessagesService {
         }
 
         return resultMessages
+    }
+
+    public async createTextMessage(conversationId: string, userToken: string, content: string): Promise<Message> {
+        const user = await this.userService.resolveUser(userToken)
+        const conversation = await this.conversationService.loadConversationById(conversationId, user.uid)
+
+        const docData = {
+            content, 
+            conversationId,
+            fromUid: user.uid,
+            toUid: conversation.otherUid,
+            type: MessageType.text,
+            createDate: Date.now()
+        }
+
+        const docRef = await this.firestore
+            .collection('messages')
+            .add(docData)
+
+        return {
+            ...docData,
+            _id: docRef.id,
+            createDate: new Date(docData.createDate)
+        }
     }
 }

@@ -1,15 +1,14 @@
 import * as admin from 'firebase-admin'
 import { Conversation, ConversationDb } from "../model";
-import { UserService } from '.';
+import { UserService, MessageDeletionService } from '.';
 import { QueryDocumentSnapshot } from '@google-cloud/firestore';
-import { MessagesService } from './MessagesService';
 
 const PAGE_SIZE = 20
 
 export class ConversationService {
     private readonly firestore = admin.firestore();
 
-    constructor(private userService: UserService, private messagesService: MessagesService) {}
+    constructor(private userService: UserService, private messagesService: MessageDeletionService) {}
 
     public async loadConversations(userToken: string, lastDisplayedId?: string): Promise<Conversation[]> {
         const user = await this.userService.resolveUser(userToken)
@@ -51,6 +50,10 @@ export class ConversationService {
 
     private async conversationDocToConversation(conversationDoc: QueryDocumentSnapshot, currentUserUid: string): Promise<Conversation>{
         const conversationDb = conversationDoc.data() as ConversationDb
+
+        if(conversationDb.participantUids.indexOf(currentUserUid) < 0) {
+            throw new Error(`Current user is not a participant in conversation ${conversationDoc.id}`)
+        }
 
         const otherParticipant = conversationDb.participants.find(participant => participant.uid != currentUserUid)
         const lastConversationDocList = await this.firestore

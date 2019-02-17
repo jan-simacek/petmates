@@ -25,6 +25,17 @@ const CONVERSATION_QUERY = gql`
     }
 `
 
+interface SingleConversationQueryResponse {
+    conversation: Conversation    
+}
+const SINGLE_CONVERSATION_QUERY = gql`
+    query Conversation($conversationId: ID!, $userToken: String!) {
+        conversation(conversationId: $conversationId, userToken: $userToken) {
+            ${conversationFields}
+        }
+    }
+`
+
 interface DeleteConversationResponse {
     deleteConversation: Conversation
 }
@@ -52,6 +63,19 @@ export class ConversationService {
             throw new Error(`Problem when loading conversations: ${response.errors}`)
         }
         return response.data.conversations as Conversation[]
+    }
+
+    public async loadConversation(conversationId: string): Promise<Conversation> {
+        const userToken = await this.userService.getCurrentUserToken()
+
+        const response = await this.apolloClient.query<SingleConversationQueryResponse>({
+            query: SINGLE_CONVERSATION_QUERY,
+            variables: { conversationId, userToken }
+        })
+        if(response.errors) {
+            throw new Error("" + response.errors)
+        }
+        return response.data.conversation as Conversation
     }
 
     public async deleteConversation(conversationId: string): Promise<Conversation> {

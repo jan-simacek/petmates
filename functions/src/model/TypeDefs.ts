@@ -18,6 +18,7 @@ export const typeDefs = gql`
         article(articleId: ID): Article
         regions: [Region]
         conversations(lastDisplayedId: ID, userToken: String!): [Conversation]
+        conversation(conversationId: ID!, userToken: String!): Conversation
         messages(conversationId: ID!, userToken: String!, lastDisplayedId: ID): [Message]
     }
    
@@ -27,5 +28,6 @@ export const typeDefs = gql`
         renewArticle(articleId: ID!, userToken: String!): Article
         addOrRemoveLike(articleId: ID!, userToken: String!, isAdd: Boolean): Article
         deleteConversation(conversationId: ID!, userToken: String!): Conversation
+        createTextMessage(conversationId: ID!, userToken: String!, content: String): Message
     }
 `

@@ -134,7 +134,6 @@ export class ArticlesService {
         const article = await this.loadArticleById(articleId)
         const user = await this.userService.resolveUser(userToken)
         if(article.userId != user.uid) {
-            console.log("access denied")
             throw new Error("Access denied - users can only delete articles they created")
         }
 

@@ -1,11 +1,7 @@
-import { BreedsService, ResolverService, UserService, ConversationService } from './services'
-import { ArticlesService } from './services/ArticlesService';
-import { RegionsService } from './services/RegionsService';
+import { BreedsService, ResolverService, UserService, ConversationService, RegionsService, ArticlesService, StorageService, MessageDeletionService, MessagesService } from './services'
 import { serviceAccount } from './ServiceAccount'
 import {ServiceAccount} from "firebase-admin";
 import * as admin from 'firebase-admin';
-import { StorageService } from './services/StorageService';
-import { MessagesService } from './services/MessagesService';
 
 
 admin.initializeApp({
@@ -18,6 +14,7 @@ export const userService = new UserService()
 export const regionsService = new RegionsService()
 export const articlesService = new ArticlesService(breedsService, userService, regionsService)
 export const storageService = new StorageService()
-export const messagesService = new MessagesService(userService)
-export const conversationService = new ConversationService(userService, messagesService)
+export const messageDeletionService = new MessageDeletionService()
+export const conversationService = new ConversationService(userService, messageDeletionService)
+export const messagesService = new MessagesService(userService, conversationService)
 export const resolversService = new ResolverService(breedsService, articlesService, regionsService, storageService, userService, conversationService, messagesService)

@@ -1,8 +1,13 @@
-import { InMemoryCache } from "apollo-cache-inmemory";
-import { Article } from "../model";
+import { InMemoryCache, NormalizedCacheObject } from "apollo-cache-inmemory";
+import { Article, Message } from "../model";
+import ApolloClient from "apollo-client";
+import { MESSAGES_QUERY } from "./MessageService";
+import { UserService } from ".";
 
 export class GraphQLCacheService {
-    constructor(private cache: InMemoryCache) {}
+    constructor(private cache: InMemoryCache, 
+        private apolloClient: ApolloClient<NormalizedCacheObject>,
+        private userService: UserService) {}
     /**
      * hack to remove the article from all queries
      * @param articleId 
@@ -53,5 +58,19 @@ export class GraphQLCacheService {
     
     private computeConversationCacheId(conversationId: string) {
         return `Conversation:${conversationId}`
+    }
+
+    public async updateMessagesCache(conversationId: string, messages: Message[]) {
+        const userToken = this.userService.getCurrentUserToken()
+        this.apolloClient
+        this.apolloClient.writeQuery({
+            query: MESSAGES_QUERY,
+            variables: {
+                conversationId,
+                userToken,
+                lastDisplayedId: undefined
+            },
+            data: messages
+        })
     }
 }

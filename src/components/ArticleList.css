@@ -2,6 +2,12 @@
     overflow: hidden;
     padding: 2em;
 }
+.articles-left {
+    justify-content: flex-start
+}
+.articles-center {
+    justify-content: center
+}
 .card-content {
     max-height: 75px;
     overflow: hidden;

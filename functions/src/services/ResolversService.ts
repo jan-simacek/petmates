@@ -64,6 +64,13 @@ export class ResolverService {
 
                     return that.conversationService.loadConversations(userToken, lastDisplayedId)
                 },
+                async conversation(_rootValue, args): Promise<Conversation> {
+                    const conversationId = args.conversationId as string
+                    const userToken = args.userToken as string
+                    
+                    const user = await that.userService.resolveUser(userToken)
+                    return that.conversationService.loadConversationById(conversationId, user.uid)
+                },
                 async messages(_rootValue, args): Promise<Message[]> {
                     const conversationId = args.conversationId as string
                     const userToken = args.userToken as string
@@ -88,6 +95,7 @@ export class ResolverService {
                         await that.storageService.deleteImage(result.imageId, userId)
                     } catch(err) {
                         console.log(`error deleting image: ${err}`)
+                        throw err
                     }
                     
                     return result
@@ -110,6 +118,13 @@ export class ResolverService {
                     const userToken = args.userToken as string
 
                     return await that.conversationService.deleteConversation(conversationId, userToken)
+                },
+                async createTextMessage(_rootValue, args): Promise<Message> {
+                    const conversationId = args.conversationId as string
+                    const userToken = args.userToken as string
+                    const content = args.content as string
+
+                    return await that.messagesService.createTextMessage(conversationId, userToken, content)
                 }
              }
         }

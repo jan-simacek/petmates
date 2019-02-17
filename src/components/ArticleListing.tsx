@@ -3,10 +3,12 @@ import InfiniteScroll from 'react-infinite-scroller'
 import { articleService } from "..";
 import { Article } from "../model";
 import { Loader, ArticleCardContainer } from ".";
-import { Grid } from "@material-ui/core";
+import { Grid, withWidth } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { ArticleListFilter } from "../services";
 import { ItemListingDelegate, ItemListingState } from "./common/ItemListingDelegate";
+import { Breakpoint } from "@material-ui/core/styles/createBreakpoints";
+import { isWidthDown } from "@material-ui/core/withWidth";
 
 interface ArticleListingState {
     items: Article[]
@@ -15,9 +17,10 @@ interface ArticleListingState {
 
 interface ArticleListingProps {
     filterState: ArticleListFilter
+    width: Breakpoint
 }
 
-export class ArticleListing extends React.Component<ArticleListingProps, ArticleListingState> {
+export class ArticleListingClass extends React.Component<ArticleListingProps, ArticleListingState> {
     private delegate: ItemListingDelegate<Article>
 
     constructor(props: any) {
@@ -53,7 +56,7 @@ export class ArticleListing extends React.Component<ArticleListingProps, Article
                 hasMore={this.state.hasMore}
                 loader={<Loader key="loader" />}>
                 <div className="article-list">
-                    <Grid container spacing={24} justify="flex-start">
+                    <Grid container spacing={24} className={isWidthDown('sm', this.props.width) ? 'articles-center' : 'articles-left'}>
                         {this.state.items.map(art => {
                             return (
                                 <Grid key={art._id} item>
@@ -74,3 +77,5 @@ export class ArticleListing extends React.Component<ArticleListingProps, Article
         )
     }
 }
+
+export const ArticleListing = withWidth()(ArticleListingClass)
