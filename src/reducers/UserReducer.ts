@@ -5,7 +5,8 @@ import { Reducer } from 'redux';
 export interface CurrentUser {
     uid: string,
     photoURL?: string,
-    displayName: string
+    displayName: string,
+    token: string
 }
 
 export interface UserState { 

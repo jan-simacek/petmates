@@ -3,6 +3,7 @@ import * as Article from './Article'
 import * as Breed from './Breed'
 import * as Region from './Region'
 import * as Conversation from './Conversation'
+import * as Message from './Message'
 
 export const typeDefs = gql`
     scalar Date
@@ -10,12 +11,14 @@ export const typeDefs = gql`
     ${Breed.breedTypeDef}
     ${Region.regionTypeDef}
     ${Conversation.conversationTypeDef}
+    ${Message.messageTypeDef}
     type Query {
         breeds: [Breed]
         articles(lastDisplayedId: ID, sex: String, breedId: Int, regionId: Int, userId: ID, likedByToken: String): [Article]
         article(articleId: ID): Article
         regions: [Region]
         conversations(lastDisplayedId: ID, userToken: String!): [Conversation]
+        messages(conversationId: ID!, userToken: String!, lastDisplayedId: ID): [Message]
     }
    
     type Mutation {

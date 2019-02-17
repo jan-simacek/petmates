@@ -1,5 +1,5 @@
 import React, { Component, ReactNode } from "react";
-import { NewArticleForm, ArticleDetail, ArticleList, FavoriteArticles, MessagesContainer } from "./components";
+import { NewArticleForm, ArticleDetail, ArticleList, FavoriteArticles, MessagesContainer, Chat } from "./components";
 import { Switch, Route } from "react-router";
 import { MyProfileContainer } from "./components";
 
@@ -9,19 +9,21 @@ export enum RoutesEnum {
     ARTICLE_DETAIL = "/article/:articleId",
     MY_PROFILE = "/my-profile",
     FAVORITES = "/favorites",
-    MESSAGES = "/messages"
+    MESSAGES = "/messages",
+    CHAT = "/chat/:conversationId"
 }
 
 export class Routes extends React.Component {
     public render(): ReactNode {
         return (
             <Switch>
-                <Route exact path={RoutesEnum.NEW_ARTICLE} component={NewArticleForm} />
-                <Route exact path={RoutesEnum.ARTICLE_LIST} component={ArticleList} />
+                <Route path={RoutesEnum.NEW_ARTICLE} component={NewArticleForm} />
+                <Route path={RoutesEnum.ARTICLE_LIST} component={ArticleList} />
                 <Route path={RoutesEnum.ARTICLE_DETAIL} component={ArticleDetail} />
                 <Route path={RoutesEnum.MY_PROFILE} component={MyProfileContainer} />
                 <Route path={RoutesEnum.FAVORITES} component={FavoriteArticles} />
                 <Route path={RoutesEnum.MESSAGES} component={MessagesContainer} />
+                <Route path={RoutesEnum.CHAT} component={Chat} />
             </Switch>
         )
     }
@@ -31,5 +33,10 @@ export class Routes extends React.Component {
             .replace(":sex?", sex || "")
             .replace(":breedId?", ("" + breedId) || "")
             .replace(":regionId?", ("" + regionId) || "")
+    }
+
+    public static getChatRoute(conversationId: string) {
+        return RoutesEnum.CHAT
+            .replace(":conversationId", conversationId)
     }
 }

@@ -11,6 +11,8 @@ import { connect } from 'react-redux';
 import { Util } from '../../services';
 import { ButtonWithConfirmation } from '../common/ButtonWithConfirmation';
 import { ItemListingDelegate, ItemListingState } from '../common/ItemListingDelegate';
+import { Link } from 'react-router-dom';
+import { RoutesEnum, Routes } from '../../Routes';
 
 const styles = (theme: any) => ({
     card: {
@@ -57,7 +59,6 @@ interface MessagesState {
 }
 
 class MessagesClass extends React.Component<MessagesProps, MessagesState> {
-    private loadInProgress = false;
     private delegate: ItemListingDelegate<Conversation>
 
     constructor(props: MessagesProps) {
@@ -89,30 +90,32 @@ class MessagesClass extends React.Component<MessagesProps, MessagesState> {
                             {this.state.items.map((conversation: Conversation) => {
                                 return (
                                     <Grid item xs={12} md={11} style={{width: '100%'}} key={conversation._id}>
-                                        <Card className={classes.card}>
-                                            <CardHeader
-                                            avatar={
-                                                conversation.otherUserPhotoUrl ? (
-                                                    <Avatar className={classes.avatar} alt={conversation.otherUserName} src={conversation.otherUserPhotoUrl} />
-                                                ) :(
-                                                    <Avatar className={classes.avatar} alt={conversation.otherUserName}>
-                                                        {conversation.otherUserName.substring(0,1)}
-                                                    </Avatar>
-                                                )
-                                            }
-                                            action={
-                                                <ButtonWithConfirmation onOk={() => this.deleteConversation(conversation._id)} 
-                                                        title="Smazat konverzaci" text="Opravdu mám smazat tuto konverzaci?">
-                                                    <DeleteIcon />
-                                                </ButtonWithConfirmation>
-                                            }
-                                            title={conversation.otherUserName}
-                                            subheader={Util.formatDate(conversation.lastUpdate)}
-                                            />
-                                            <CardContent className={classes.cardContent}>
-                                                <Typography variant="body1">{conversation.lastMessage}</Typography>
-                                            </CardContent>
-                                        </Card>
+                                        <Link to={Routes.getChatRoute(conversation._id)} style={{textDecoration: 'none'}}>
+                                            <Card className={classes.card}>
+                                                <CardHeader
+                                                avatar={
+                                                    conversation.otherUserPhotoUrl ? (
+                                                        <Avatar className={classes.avatar} alt={conversation.otherUserName} src={conversation.otherUserPhotoUrl} />
+                                                    ) :(
+                                                        <Avatar className={classes.avatar} alt={conversation.otherUserName}>
+                                                            {conversation.otherUserName.substring(0,1)}
+                                                        </Avatar>
+                                                    )
+                                                }
+                                                action={
+                                                    <ButtonWithConfirmation onOk={() => this.deleteConversation(conversation._id)} 
+                                                            title="Smazat konverzaci" text="Opravdu mám smazat tuto konverzaci?">
+                                                        <DeleteIcon />
+                                                    </ButtonWithConfirmation>
+                                                }
+                                                title={conversation.otherUserName}
+                                                subheader={Util.formatDate(conversation.lastUpdate)}
+                                                />
+                                                <CardContent className={classes.cardContent}>
+                                                    <Typography variant="body1">{conversation.lastMessage}</Typography>
+                                                </CardContent>
+                                            </Card>
+                                        </Link>
                                     </Grid>
                                 )
                             })}

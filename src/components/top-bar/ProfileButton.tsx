@@ -1,6 +1,6 @@
 import React, { Component, ReactNode } from "react";
 import { Button, Avatar, Menu, MenuItem, IconButton } from "@material-ui/core";
-import { auth, provider } from "../../index";
+import { auth, provider, userService } from "../../index";
 import { ArrowDropDown } from '@material-ui/icons'
 import './ProfileButton.css'
 import { CurrentUser } from "../../reducers";
@@ -18,6 +18,7 @@ interface ProfileButtonProps {
 }
 
 export const RENDER_TIMEOUT = 3500
+
 export class ProfileButton extends Component<ProfileButtonProps, ProfileButtonState> {
     
     constructor(props: any){
@@ -39,8 +40,15 @@ export class ProfileButton extends Component<ProfileButtonProps, ProfileButtonSt
     public componentDidMount() {
         auth.onAuthStateChanged((user) => {
             if (user) {
-                this.setState({ startRender: true});
-                this.props.storeUser({displayName: user.displayName!, uid: user.uid, photoURL: user.photoURL || undefined})
+                this.setState({ startRender: true})
+                userService.getCurrentUserToken().then(token => {
+                    this.props.storeUser({
+                        displayName: user.displayName!, 
+                        uid: user.uid, 
+                        photoURL: user.photoURL || undefined,
+                        token
+                    })
+                })
             }
             
         });

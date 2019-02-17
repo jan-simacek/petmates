@@ -1,0 +1,36 @@
+.composed-message {
+    align-self: center;
+    background: white;
+    max-width: 60em;
+    padding: 1em 1em 0 1em;
+    margin-top: 1px;
+    margin-bottom: 1em;
+}
+
+.send-icon {
+    color: #77cfe8
+}
+
+.chat-feed {
+    background: white;
+    max-width: 60em;
+    padding: 1em 1em 0 1em;
+}
+
+.chat-heading {
+    background: white;
+    max-width: 60em;
+    margin-bottom: 1px;
+    padding: 1em;
+}
+
+.avatar {
+    background: red;
+}
+
+.load-more {
+    background: white;
+    max-width: 60em;
+    padding: 1em;
+    text-align: center;
+}

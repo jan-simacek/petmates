@@ -19,7 +19,7 @@ export class ConversationService {
             .where('participantUids', 'array-contains', user.uid)
 
         if(lastDisplayedId) {
-            const lastDisplayedConversation = await this.loadConversationById(lastDisplayedId)
+            const lastDisplayedConversation = await this.loadConversationDocById(lastDisplayedId)
             query = query.startAfter(lastDisplayedConversation)
         }
 
@@ -33,7 +33,12 @@ export class ConversationService {
         return await Promise.all(conversationPromisses)
     }
 
-    private async loadConversationById(id: string): Promise<QueryDocumentSnapshot> {
+    public async loadConversationById(conversationId: string, currentUserUid: string): Promise<Conversation> {
+        const conversationDoc = await this.loadConversationDocById(conversationId)
+        return await this.conversationDocToConversation(conversationDoc, currentUserUid)
+    }
+
+    private async loadConversationDocById(id: string): Promise<QueryDocumentSnapshot> {
         const conversations = await this.firestore
             .collection('conversations')
             .where(admin.firestore.FieldPath.documentId(), '==', id)
@@ -72,7 +77,7 @@ export class ConversationService {
 
     public async deleteConversation(conversationId: string, userToken: string): Promise<Conversation> {
         const user = await this.userService.resolveUser(userToken)
-        const conversationDoc = await this.loadConversationById(conversationId)
+        const conversationDoc = await this.loadConversationDocById(conversationId)
         const conversationDb = conversationDoc.data() as ConversationDb
         const index = conversationDb.participantUids.indexOf(user.uid)
         if(index < 0) {
